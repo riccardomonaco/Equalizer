@@ -33,8 +33,15 @@ private:
     EqualizerAudioProcessor& audioProcessor;
 
     // Graphics components
+        //int windowWidth;
+        //int windowHeight;
+
     juce::Slider inputGainFader;
     juce::Slider outputGainFader;
+    
+    //int inputGainFaderPosX = 1224;
+    //inputGainFaderPosY = 
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessorEditor)
 };
