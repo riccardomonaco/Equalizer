@@ -26,7 +26,7 @@ EqualizerAudioProcessorEditor::~EqualizerAudioProcessorEditor()
 void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
 {
     //Instantiating background image
-    bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_UI_jpg, BinaryData::EQ_UI_jpgSize);
+    bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_UI_VOL_jpg, BinaryData::EQ_UI_VOL_jpgSize);
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);

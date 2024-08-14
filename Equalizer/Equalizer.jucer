@@ -5,6 +5,7 @@
               pluginFormats="buildStandalone,buildVST,buildVST3">
   <MAINGROUP id="gkWq9L" name="Equalizer">
     <GROUP id="{93B9DB73-51F7-4FA8-E95F-88E8730E1145}" name="Assets">
+      <FILE id="Bq5Tal" name="EQ UI VOL.jpg" compile="0" resource="1" file="Source/Assets/EQ UI VOL.jpg"/>
       <FILE id="X49rrg" name="EQ UI.jpg" compile="0" resource="1" file="Source/Assets/EQ UI.jpg"/>
     </GROUP>
     <GROUP id="{A9B44CE4-4DB6-FD55-BFFE-FCE4510B4D1E}" name="Source">
