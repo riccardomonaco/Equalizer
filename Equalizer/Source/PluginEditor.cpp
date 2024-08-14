@@ -15,6 +15,8 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+    addAndMakeVisible(inputGainFader);
+    addAndMakeVisible(outputGainFader);
     setSize (750, 450);
 }
 
@@ -46,4 +48,6 @@ void EqualizerAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    inputGainFader.setBounds (1224, 490, 10, 359);
+    outputGainFader.setBounds (1364, 490, 10, 359);
 }

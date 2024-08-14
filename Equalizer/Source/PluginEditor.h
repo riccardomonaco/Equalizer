@@ -32,5 +32,9 @@ private:
     // access the processor object that created it.
     EqualizerAudioProcessor& audioProcessor;
 
+    // Graphics components
+    juce::Slider inputGainFader;
+    juce::Slider outputGainFader;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessorEditor)
 };
