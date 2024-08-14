@@ -1,6 +1,7 @@
 # Equalizer
  
 '''c++
+
 juce::AudioProcessorEditor* EqualizerAudioProcessor::createEditor()
 {
     /****
