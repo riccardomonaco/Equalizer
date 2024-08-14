@@ -12,3 +12,6 @@ juce::AudioProcessorEditor* EqualizerAudioProcessor::createEditor()
 }
 
 ```
+___
+
+Viene returnato un editor generico che viene programmaticamente popolato in base ai parametri audio dichiarati. Non è tweakabile esteticamente serve solo a scopo di test.
