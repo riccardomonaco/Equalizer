@@ -27,6 +27,10 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     inputGainFader.setDoubleClickReturnValue(true, 0.0);
     outputGainFader.setDoubleClickReturnValue(true, 0.0);
 
+    inputGainAtch = 
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "input_gain", inputGainFader);
+
     setSize (750 * 2, 450 * 2);
 }
 
@@ -58,6 +62,6 @@ void EqualizerAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    inputGainFader.setBounds (610 * 2, 245 * 2, 10 * 2, 180 * 2);
-    outputGainFader.setBounds (680 * 2, 245 * 2, 10 * 2, 180 * 2);
+    inputGainFader.setBounds (610 * 2, 245 * 2, 10 * 2, 181 * 2);
+    outputGainFader.setBounds (680 * 2, 245 * 2, 10 * 2, 181 * 2);
 }

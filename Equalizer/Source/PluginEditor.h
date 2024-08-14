@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+
 //==============================================================================
 /**
 */
@@ -41,6 +42,8 @@ private:
     
     //int inputGainFaderPosX = 1224;
     //inputGainFaderPosY = 
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAtch;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessorEditor)
