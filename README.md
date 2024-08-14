@@ -1,7 +1,6 @@
 # Equalizer
  
-'''c++
-
+```c++
 juce::AudioProcessorEditor* EqualizerAudioProcessor::createEditor()
 {
     /****
@@ -11,4 +10,5 @@ juce::AudioProcessorEditor* EqualizerAudioProcessor::createEditor()
     //return new EqualizerAudioProcessorEditor (*this);
     return new juce::GenericAudioProcessorEditor(*this);
 }
-'''
+
+```
