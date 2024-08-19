@@ -15,23 +15,29 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+
     addAndMakeVisible(inputGainFader);
-    addAndMakeVisible(outputGainFader);
-
     inputGainFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    outputGainFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-
     inputGainFader.setRange(-24.0, 12.0, 0.1);
-    outputGainFader.setRange(-24.0, 12.0, 0.1);
-
     inputGainFader.setDoubleClickReturnValue(true, 0.0);
-    outputGainFader.setDoubleClickReturnValue(true, 0.0);
-
-    inputGainAtch = 
+    inputGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "input_gain", inputGainFader);
+    //inputGainFader.setLookAndFeel(&customLookAndFeel);
+
+   
+    addAndMakeVisible(outputGainFader);
+    outputGainFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    outputGainFader.setRange(-24.0, 12.0, 0.1);
+    outputGainFader.setDoubleClickReturnValue(true, 0.0);
+    outputGainAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "output_gain", outputGainFader);
+    //outputGainFader.setLookAndFeel(&customLookAndFeel);
+
 
     setSize (750 * 2, 450 * 2);
+
 }
 
 EqualizerAudioProcessorEditor::~EqualizerAudioProcessorEditor()

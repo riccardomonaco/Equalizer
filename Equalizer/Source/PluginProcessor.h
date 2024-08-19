@@ -57,6 +57,10 @@ public:
     juce::AudioProcessorValueTreeState treeState;
 
 private:
+    // DSP Stuff ==================================================================
+    juce::dsp::ProcessorDuplicator<juce::dsp::StateVariableFilter::Filter<float>, 
+                                   juce::dsp::StateVariableFilter::Parameters<float>> stateVariableFilter;
+
     // Parameters =================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 

@@ -36,9 +36,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     params.reserve(1);
     
     // Params definition
-    auto pGainIn = std::make_unique<juce::AudioParameterFloat>("input_gain","Input Gain",-24.0, 12.0, 0.0);
+    auto pGainIn = std::make_unique<juce::AudioParameterFloat>("input_gain", "Input Gain", -24.0, 12.0, 0.0);
+    auto pGainOut = std::make_unique<juce::AudioParameterFloat>("output_gain","Output Gain",-24.0, 12.0, 0.0);
 
     params.push_back(std::move(pGainIn));
+    params.push_back(std::move(pGainOut));
 
     return { params.begin(), params.end() };
 }
@@ -149,8 +151,12 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+
     float inputGain = *treeState.getRawParameterValue("input_gain");
     float rawInputGain = juce::Decibels::decibelsToGain(inputGain);
+
+    float outputGain = *treeState.getRawParameterValue("output_gain");
+    float rawOutputGain = juce::Decibels::decibelsToGain(outputGain);
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -173,6 +179,9 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
             channelData[sample] *= rawInputGain;
+            //PROCESS
+            channelData[sample] *= rawOutputGain;
+
         }
 
         // ..do something to the data...

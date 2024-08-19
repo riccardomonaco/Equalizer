@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "CustomLookAndFeel.h"
 
 
 //==============================================================================
@@ -26,6 +27,9 @@ public:
     void resized() override;
 
 private:
+    //Customizable style class
+    CustomLookAndFeel customLookAndFeel;
+
     // Background image variable
     juce::Image bgImage;
 
@@ -44,6 +48,7 @@ private:
     //inputGainFaderPosY = 
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputGainAtch;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessorEditor)
