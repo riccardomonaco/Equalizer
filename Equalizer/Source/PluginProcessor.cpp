@@ -8,6 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "lopassButterTest.h"
+#include "lopassButterTest.cpp"
 
 //==============================================================================
 EqualizerAudioProcessor::EqualizerAudioProcessor()
@@ -152,11 +154,13 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    float inputGain = *treeState.getRawParameterValue("input_gain");
-    float rawInputGain = juce::Decibels::decibelsToGain(inputGain);
+    double inputGain = *treeState.getRawParameterValue("input_gain");
+    double rawInputGain = juce::Decibels::decibelsToGain(inputGain);
 
-    float outputGain = *treeState.getRawParameterValue("output_gain");
-    float rawOutputGain = juce::Decibels::decibelsToGain(outputGain);
+    double outputGain = *treeState.getRawParameterValue("output_gain");
+    double rawOutputGain = juce::Decibels::decibelsToGain(outputGain);
+
+    lopassButterTest lopassFilter = lopassButterTest(1000);
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -179,12 +183,10 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
             channelData[sample] *= rawInputGain;
-            //PROCESS
+            channelData[sample] = lopassFilter.processSample(channelData[sample]);
             channelData[sample] *= rawOutputGain;
 
         }
-
-        // ..do something to the data...
     }
 }
 
