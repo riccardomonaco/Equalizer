@@ -8,6 +8,7 @@
   ==============================================================================
 */
 #define _USE_MATH_DEFINES
+#define M_PI 3.14159265358979323846
 
 #include <JuceHeader.h>
 #include <cmath>
@@ -15,69 +16,69 @@
 
 //==============================================================================
 
-lopassButterTest::lopassButterTest(double cutoffFreq)
+lopassButterTest::lopassButterTest(double cutoffFreq, int order)
 {
-    this->sampleRate = 44100;
-    this->cutoffFreq = cutoffFreq;
-    bCoefficients = juce::dsp::IIR::Coefficients<double>::makeLowPass(sampleRate, cutoffFreq);
-    bFilter = juce::dsp::IIR::Filter<double>::Filter(bCoefficients);
+    sampleRate = 44100;
+    cutoffFreq = cutoffFreq;
+    order = order;
+    //updateCoefficients(cutoffFreq, this->butterFilters);
 }
 
 lopassButterTest::~lopassButterTest()
 {
     this->sampleRate = 44100;
     this->cutoffFreq = 1000;
-    bCoefficients = juce::dsp::IIR::Coefficients<double>::makeLowPass(sampleRate, cutoffFreq);
-    bFilter = juce::dsp::IIR::Filter<double>::Filter(bCoefficients);
+    //bCoefficients = juce::dsp::IIR::Coefficients<double>::makeLowPass(sampleRate, cutoffFreq);
+    //bFilter = juce::dsp::IIR::Filter<double>::Filter(bCoefficients);
 }
 
-void lopassButterTest::updateCoefficients()
+/*
+juce::Array<juce::dsp::IIR::Coefficients<double>> lopassButterTest::updateCoefficients(double cutoffFreq,
+                                                                                       juce::Array<juce::dsp::IIR::Filter<double>> butterFilters)
 {    
-    double pig = 3.14;
-    // Calcolo del periodo di campionamento
-    double T = 1.0 / sampleRate;
+    int order = 2;
+    juce::Array<juce::dsp::IIR::Coefficients<double>> arrayFilters;
 
-    // Frequenza angolare di taglio
-    double omegaC = 2.0 * pig * this->cutoffFreq;
+    if (order % 2 == 1)
+    {
+        arrayFilters.add(*juce::dsp::IIR::Coefficients<double>::makeFirstOrderLowPass(sampleRate, cutoffFreq));
 
-    // Trasformazione bilineare dei poli
-    double k = 2.0 / T;
+        for (int i = 0; i < order / 2; ++i)
+        {
+            auto Q = 1.0 / (2.0 * std::cos((i + 1.0) * M_PI / order));
+            arrayFilters.add(*juce::dsp::IIR::Coefficients<double>::makeLowPass(sampleRate, cutoffFreq,
+                static_cast<double> (Q)));
 
-    // Polinomio Butterworth di terzo ordine: i poli si trovano a 60°, 120° e 180° gradi nel piano complesso
-    double theta1 = pig / 6.0;  // 30° in radianti
-    double theta2 = pig / 2.0;  // 90° in radianti
-    double theta3 = 5.0 * pig / 6.0;  // 150° in radianti
+            juce::dsp::IIR::Filter<double> tF;
+            tF.coefficients = arrayFilters[i];
+            butterFilters.add(tF);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < order / 2; ++i)
+        {
+            auto Q = 1.0 / (2.0 * std::cos((2.0 * i + 1.0) * M_PI / (order * 2.0)));
+            arrayFilters.add(*juce::dsp::IIR::Coefficients<double>::makeLowPass(sampleRate, cutoffFreq,
+                static_cast<double> (Q)));
 
-    // Polinomio analogico (poli nel semicerchio sinistro)
-    std::complex<double> p1 = std::polar(omegaC, theta1);
-    std::complex<double> p2 = std::polar(omegaC, theta2);
-    std::complex<double> p3 = std::polar(omegaC, theta3);
+            juce::dsp::IIR::Filter<double> tF;
+            tF.coefficients = arrayFilters[i];
+            butterFilters.add(tF);
+        }
+    }
 
-    // Trasformiamo i poli tramite la trasformazione bilineare
-    std::complex<double> z1 = (k + p1) / (k - p1);
-    std::complex<double> z2 = (k + p2) / (k - p2);
-    std::complex<double> z3 = (k + p3) / (k - p3);
-
-    // Calcolo dei coefficienti del filtro IIR usando i poli digitali
-    double b0 = 1.0; // Il numeratore è normalizzato
-    double b1 = -2.0 * (z1.real() + z2.real() + z3.real());
-    double b2 = 2.0 * (z1.real() * z2.real() + z1.real() * z3.real() + z2.real() * z3.real());
-    double b3 = -2.0 * z1.real() * z2.real() * z3.real();
-    double a0 = 1.0;
-    double a1 = -(z1.real() + z2.real() + z3.real());
-    double a2 = z1.real() * z2.real() + z1.real() * z3.real() + z2.real() * z3.real();
-    double a3 = -z1.real() * z2.real() * z3.real();
-
-    // Normalizzazione del numeratore (il filtro è passa-basso)
-    b1 /= a0;
-    b2 /= a0;
-    b3 /= a0;
-    a1 /= a0;
-    a2 /= a0;
-    a3 /= a0;
-}
-
-double lopassButterTest::processSample(double currSample)
+    return arrayFilters;
+ }
+ */
+/*double lopassButterTest::processSample(double currSample)
 {
-    return bFilter.processSample(currSample);
-}
+    double output = 0;
+
+    for (int i = 0; i < order / 2; ++i) 
+    {
+        butterFilters[i].processSample(currSample);
+    }
+
+    return output;
+}*/

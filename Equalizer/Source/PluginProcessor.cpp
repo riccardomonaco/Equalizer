@@ -160,7 +160,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     double outputGain = *treeState.getRawParameterValue("output_gain");
     double rawOutputGain = juce::Decibels::decibelsToGain(outputGain);
 
-    lopassButterTest lopassFilter = lopassButterTest(1000);
+    //lopassButterTest lopassFilter = lopassButterTest(1000, 4);
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -183,7 +183,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
             channelData[sample] *= rawInputGain;
-            channelData[sample] = lopassFilter.processSample(channelData[sample]);
+            //channelData[sample] = lopassFilter.processSample(channelData[sample]);
             channelData[sample] *= rawOutputGain;
 
         }

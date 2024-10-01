@@ -16,6 +16,10 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
 
+    //Adding custom lookandfeel class
+    CustomLookAndFeel customLookAndFeel;
+
+    //Adding and setting the volume input slider
     addAndMakeVisible(inputGainFader);
     inputGainFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     inputGainFader.setRange(-24.0, 12.0, 0.1);
@@ -23,9 +27,9 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     inputGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "input_gain", inputGainFader);
-    //inputGainFader.setLookAndFeel(&customLookAndFeel);
+    inputGainFader.setLookAndFeel(&customLookAndFeel);
 
-   
+    //Adding and setting the volume output slider
     addAndMakeVisible(outputGainFader);
     outputGainFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     outputGainFader.setRange(-24.0, 12.0, 0.1);
@@ -33,11 +37,9 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     outputGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "output_gain", outputGainFader);
-    //outputGainFader.setLookAndFeel(&customLookAndFeel);
-
+    outputGainFader.setLookAndFeel(&customLookAndFeel);
 
     setSize (750 * 2, 450 * 2);
-
 }
 
 EqualizerAudioProcessorEditor::~EqualizerAudioProcessorEditor()
@@ -48,7 +50,7 @@ EqualizerAudioProcessorEditor::~EqualizerAudioProcessorEditor()
 void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
 {
     //Instantiating background image
-    bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_UI_VOL_jpg, BinaryData::EQ_UI_VOL_jpgSize);
+    bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_BG_SPC_png, BinaryData::EQ_BG_SPC_pngSize);
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
