@@ -11,10 +11,6 @@
       <FILE id="X49rrg" name="EQ UI.jpg" compile="0" resource="1" file="Source/Assets/EQ UI.jpg"/>
     </GROUP>
     <GROUP id="{A9B44CE4-4DB6-FD55-BFFE-FCE4510B4D1E}" name="Source">
-      <FILE id="o1py7P" name="lopassButterTest.cpp" compile="1" resource="0"
-            file="Source/lopassButterTest.cpp"/>
-      <FILE id="fbUKFz" name="lopassButterTest.h" compile="0" resource="0"
-            file="Source/lopassButterTest.h"/>
       <FILE id="DFX3jm" name="CustomLookAndFeel.cpp" compile="1" resource="0"
             file="Source/CustomLookAndFeel.cpp"/>
       <FILE id="MWbwmA" name="CustomLookAndFeel.h" compile="0" resource="0"

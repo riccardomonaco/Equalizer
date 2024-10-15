@@ -8,8 +8,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "lopassButterTest.h"
-#include "lopassButterTest.cpp"
 
 //==============================================================================
 EqualizerAudioProcessor::EqualizerAudioProcessor()
@@ -41,8 +39,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     auto pGainIn = std::make_unique<juce::AudioParameterFloat>("input_gain", "Input Gain", -24.0, 12.0, 0.0);
     auto pGainOut = std::make_unique<juce::AudioParameterFloat>("output_gain","Output Gain",-24.0, 12.0, 0.0);
 
-    auto subFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 0);
-    auto subFreqGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -12, 12, 0);
+    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 0);
+    auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -12, 12, 0);
 
     params.push_back(std::move(pGainIn));
     params.push_back(std::move(pGainOut));
@@ -183,6 +181,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
     subFilter = juce::dsp::IIR::Filter<double>::Filter(subCoefficients);
     
+    /*
     // Retrieving BASS FREQUENCY and GAIN value from slider
     int bassFrequency = *treeState.getRawParameterValue("bass_freq");
     int bassGain = *treeState.getRawParameterValue("bass_gain");
@@ -197,6 +196,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     int highFrequency = *treeState.getRawParameterValue("high_freq");
     int highGain = *treeState.getRawParameterValue("high_gain");
     int rawHighGain = juce::Decibels::decibelsToGain(highGain);
+    */
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -219,7 +219,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
             channelData[sample] *= rawInputGain;
-            channelData[sample] += (subFilter.processSample(channelData[sample])) * rawSubGain;
+            //channelData[sample] += (subFilter.processSample(channelData[sample])) * rawSubGain;
             channelData[sample] *= rawOutputGain;
 
         }
