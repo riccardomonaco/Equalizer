@@ -69,8 +69,13 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> subGainAtch;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bassFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bassGainAtch;
+
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> midFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> midGainAtch;
+
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highGainAtch;
 
 
 
