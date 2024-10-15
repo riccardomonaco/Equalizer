@@ -43,12 +43,35 @@ private:
 
     juce::Slider inputGainFader;
     juce::Slider outputGainFader;
+
+    juce::Slider subFrequency;
+    juce::Slider subGain;
+
+    juce::Slider bassFrequency;
+    juce::Slider bassGain;
+
+    juce::Slider midFrequency;
+    juce::Slider midGain;
+
+    juce::Slider highFrequency;
+    juce::Slider highGain;
+
+    juce::Slider lopassFrequency;
+    //juce::Button lopassActive;
     
-    //int inputGainFaderPosX = 1224;
-    //inputGainFaderPosY = 
+    juce::Slider hipassFrequency;
+    //juce::Button hipassActive;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAtch;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputGainAtch;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> subFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> subGainAtch;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bassFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> midFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highFrequencyAtch;
+
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessorEditor)
