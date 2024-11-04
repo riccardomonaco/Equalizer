@@ -45,6 +45,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     params.push_back(std::move(pGainIn));
     params.push_back(std::move(pGainOut));
 
+    params.push_back(std::move(pSubFreq));
+    params.push_back(std::move(pSubGain));
+
     return { params.begin(), params.end() };
 }
 
@@ -171,7 +174,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     //Creating the sub band pass filter
     juce::dsp::IIR::Filter<double>::CoefficientsPtr subCoefficients;
     juce::dsp::IIR::Filter<double> subFilter;
-
+    
     if (subGain >= 0) {
         subCoefficients = juce::dsp::IIR::Coefficients<double>::makeBandPass(44100, subFrequency);
     }
