@@ -48,16 +48,46 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "output_gain", outputGainFader);
     //Setting custom lookandfeel
-    outputGainFader.setLookAndFeel(&customLookAndFeel);
+    //outputGainFader.setLookAndFeel(&customLookAndFeel);
+
+    /********************************************************
+     *
+     *   Adding and setting the LOPASS FREQ input slider
+     *
+     *********************************************************/
+    addAndMakeVisible(hipassFrequency);
+    hipassFrequency.setSliderStyle(juce::Slider::SliderStyle::Rotary);
+    hipassFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    hipassFrequency.setRange(20, 20000, 1);
+    hipassFrequency.setDoubleClickReturnValue(true, 20);
+    hipassFrequencyAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "hipass_freq", hipassFrequency);
+
+    /********************************************************
+     *
+     *   Adding and setting the HIPASS FREQ input slider
+     *
+     *********************************************************/
+    addAndMakeVisible(lopassFrequency);
+    lopassFrequency.setSliderStyle(juce::Slider::SliderStyle::Rotary);
+    lopassFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    lopassFrequency.setRange(20, 20000, 1);
+    lopassFrequency.setDoubleClickReturnValue(true, 20000.0);
+    lopassFrequencyAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "lopass_freq", lopassFrequency);
+    lopassFrequency.setLookAndFeel(&customLookAndFeel);
+
 
     /********************************************************
      *
      *   Adding and setting the SUB FREQUENCIES input slider
      *
-     *********************************************************/
+     ********************************************************
     addAndMakeVisible(subFrequency);
     subFrequency.setSliderStyle(juce::Slider::SliderStyle::Rotary);
-    subFrequency.setRange(30, 100, 20);
+    subFrequency.setRange(double(500), double(1000), double(10));
     subFrequency.setDoubleClickReturnValue(true, 30);
     subFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
@@ -70,6 +100,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     subGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "sub_gain", subGain);
+    */
 
     //Setting the window size
     setSize (750 * 2, 450 * 2);
@@ -104,6 +135,12 @@ void EqualizerAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
+    /*
+    POSIZIONI KNOBS
+    LOPASS 
+    
+    */
+
     /* Input and output faders */
     inputGainFader.setBounds (610 * 2, 245 * 2, 10 * 2, 181 * 2);
     outputGainFader.setBounds (680 * 2, 245 * 2, 10 * 2, 181 * 2);
@@ -114,6 +151,14 @@ void EqualizerAudioProcessorEditor::resized()
     int filterKnobY = 600;
     int gainKnobY = 450;
     int spacingBKnobs = 250;
+    int lopasshipassY = 695;
+    int lopasshipassWidth = 135;
+    int lopassX = 80;
+    int hipassX = 900;
+
+
+    lopassFrequency.setBounds(lopassX, lopasshipassY, lopasshipassWidth, lopasshipassWidth);
+    hipassFrequency.setBounds(hipassX, lopasshipassY, lopasshipassWidth, lopasshipassWidth);
 
     /* Sub frequency and gain knobs positions and dimensions */
     subFrequency.setBounds(50, filterKnobY, knobWidth, knobHeight);

@@ -19,9 +19,14 @@ public:
     CustomLookAndFeel();
 
     void drawLinearSlider(juce::Graphics& g, int x, int y, int width, int height,
-        float sliderPos, float minSliderPos, float maxSliderPos,
-        const juce::Slider::SliderStyle, juce::Slider& slider) override;
+         float sliderPos, float minSliderPos, float maxSliderPos,
+         const juce::Slider::SliderStyle, juce::Slider& slider) override;
+
+    void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height,
+         float sliderPos, float rotaryStartAngle, float rotaryEndAngle, 
+         juce::Slider& slider) override;
 
 private:
-    juce::Image thumbImage;
+    juce::Image faderImage;
+    juce::Image lhKnobImage;
 };

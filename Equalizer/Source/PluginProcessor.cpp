@@ -19,7 +19,8 @@ EqualizerAudioProcessor::EqualizerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ), treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
+                       ), treeState(*this, nullptr, "PARAMETERS", createParameterLayout()), 
+                          testFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 500, 0.1f))
 #endif
 {
 }
@@ -39,11 +40,17 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     auto pGainIn = std::make_unique<juce::AudioParameterFloat>("input_gain", "Input Gain", -24.0, 12.0, 0.0);
     auto pGainOut = std::make_unique<juce::AudioParameterFloat>("output_gain","Output Gain",-24.0, 12.0, 0.0);
 
+    auto pLoPassFreq = std::make_unique<juce::AudioParameterFloat>("lopass_freq", "LowPass Frequency", 20, 20000, 20000);
+    auto pHiPassFreq = std::make_unique<juce::AudioParameterFloat>("hipass_freq", "HiPass Frequency", 20, 20000, 20);
+
     auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 0);
     auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -12, 12, 0);
 
     params.push_back(std::move(pGainIn));
     params.push_back(std::move(pGainOut));
+
+    params.push_back(std::move(pLoPassFreq));
+    params.push_back(std::move(pHiPassFreq));
 
     params.push_back(std::move(pSubFreq));
     params.push_back(std::move(pSubGain));
@@ -116,8 +123,17 @@ void EqualizerAudioProcessor::changeProgramName (int index, const juce::String& 
 //==============================================================================
 void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    lastSampleRate = sampleRate;
+
+    //Structure to define the context for the dsp module
+    juce::dsp::ProcessSpec specs;
+    specs.sampleRate = sampleRate;
+    specs.maximumBlockSize = samplesPerBlock;
+    specs.numChannels = getTotalNumOutputChannels();
+
+    //Setting the filter and cleaning the pending values
+    testFilter.prepare(specs);
+    testFilter.reset();
 }
 
 void EqualizerAudioProcessor::releaseResources()
@@ -152,19 +168,34 @@ bool EqualizerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 }
 #endif
 
+void EqualizerAudioProcessor::updateFilter() {
+    *testFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, 
+                                                                         *treeState.getRawParameterValue("lopass_freq"), 
+                                                                         0.1f);
+}
+
 void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // Retrieving VOLUME INPUT value from slider
-    double inputGain = *treeState.getRawParameterValue("input_gain");
-    double rawInputGain = juce::Decibels::decibelsToGain(inputGain);
+    //Cleaning empty or non used channels
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear(i, 0, buffer.getNumSamples());
+
+    //Creating the audio block to work with
+    juce::dsp::AudioBlock<float> audioBlock(buffer);
+    updateFilter();
+    testFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
 
     // Retrieving VOLUME INPUT value from slider
-    double outputGain = *treeState.getRawParameterValue("output_gain");
-    double rawOutputGain = juce::Decibels::decibelsToGain(outputGain);
+    float inputGain = *treeState.getRawParameterValue("input_gain");
+    float rawInputGain = juce::Decibels::decibelsToGain(inputGain);
+
+    // Retrieving VOLUME INPUT value from slider
+    float outputGain = *treeState.getRawParameterValue("output_gain");
+    float rawOutputGain = juce::Decibels::decibelsToGain(outputGain);
 
     // Retrieving SUB FREQUENCY and GAIN value from slider
     int subFrequency = *treeState.getRawParameterValue("sub_freq");
@@ -172,17 +203,16 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     int rawSubGain = juce::Decibels::decibelsToGain(subGain);
 
     //Creating the sub band pass filter
-    juce::dsp::IIR::Filter<double>::CoefficientsPtr subCoefficients;
-    juce::dsp::IIR::Filter<double> subFilter;
-    
+    /*
     if (subGain >= 0) {
-        subCoefficients = juce::dsp::IIR::Coefficients<double>::makeBandPass(44100, subFrequency);
+        subCoefficients = juce::dsp::IIR::Coefficients<float>::makeBandPass(44100, subFrequency);
     }
     else {
-        subCoefficients = juce::dsp::IIR::Coefficients<double>::makeNotch(44100, subFrequency);
-    }
+        subCoefficients = juce::dsp::IIR::Coefficients<float>::makeNotch(44100, subFrequency);
+    }*/
 
-    subFilter = juce::dsp::IIR::Filter<double>::Filter(subCoefficients);
+    //subFilter = juce::dsp::IIR::Filter<float>::Filter(subCoefficients);
+    //subFilter.process(context);
     
     /*
     // Retrieving BASS FREQUENCY and GAIN value from slider
@@ -201,32 +231,19 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     int rawHighGain = juce::Decibels::decibelsToGain(highGain);
     */
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+
+    /*for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
             channelData[sample] *= rawInputGain;
-            //channelData[sample] += (subFilter.processSample(channelData[sample])) * rawSubGain;
+
             channelData[sample] *= rawOutputGain;
 
         }
-    }
+    }*/
 }
 
 //==============================================================================

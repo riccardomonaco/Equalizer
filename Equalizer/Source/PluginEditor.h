@@ -77,7 +77,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highFrequencyAtch;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highGainAtch;
 
-
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lopassFrequencyAtch;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hipassFrequencyAtch;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessorEditor)
 };

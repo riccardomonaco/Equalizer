@@ -28,6 +28,7 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
+    void updateFilter();
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
@@ -57,13 +58,16 @@ public:
     juce::AudioProcessorValueTreeState treeState;
 
 private:
+    float lastSampleRate;
+    
     // DSP Stuff ==================================================================
-    juce::dsp::ProcessorDuplicator<juce::dsp::StateVariableFilter::Filter<float>, 
-                                   juce::dsp::StateVariableFilter::Parameters<float>> stateVariableFilter;
+    juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 
+                                   juce::dsp::IIR::Coefficients<float>> testFilter;
 
     // Parameters =================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessor)
+
 };
