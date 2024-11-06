@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "CustomLookAndFeel.h"
+#include "testLAF.h"
 
 //==============================================================================
 EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProcessor& p)
@@ -16,9 +17,6 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-
-    //Adding custom lookandfeel class
-    CustomLookAndFeel customLookAndFeel;
 
     /********************************************************
      *
@@ -35,6 +33,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     //Setting custom lookandfeel
     inputGainFader.setLookAndFeel(&customLookAndFeel);
 
+
     /********************************************************
      *
      *   Adding and setting the OUTPUT VOLUME slider
@@ -48,7 +47,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "output_gain", outputGainFader);
     //Setting custom lookandfeel
-    //outputGainFader.setLookAndFeel(&customLookAndFeel);
+    outputGainFader.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
      *
@@ -56,10 +55,11 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
      *
      *********************************************************/
     addAndMakeVisible(hipassFrequency);
-    hipassFrequency.setSliderStyle(juce::Slider::SliderStyle::Rotary);
+    hipassFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     hipassFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     hipassFrequency.setRange(20, 20000, 1);
     hipassFrequency.setDoubleClickReturnValue(true, 20);
+    hipassFrequency.setLookAndFeel(&customLookAndFeel);
     hipassFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "hipass_freq", hipassFrequency);
@@ -70,7 +70,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
      *
      *********************************************************/
     addAndMakeVisible(lopassFrequency);
-    lopassFrequency.setSliderStyle(juce::Slider::SliderStyle::Rotary);
+    lopassFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     lopassFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     lopassFrequency.setRange(20, 20000, 1);
     lopassFrequency.setDoubleClickReturnValue(true, 20000.0);
@@ -139,11 +139,7 @@ void EqualizerAudioProcessorEditor::resized()
     POSIZIONI KNOBS
     LOPASS 
     
-    */
-
-    /* Input and output faders */
-    inputGainFader.setBounds (610 * 2, 245 * 2, 10 * 2, 181 * 2);
-    outputGainFader.setBounds (680 * 2, 245 * 2, 10 * 2, 181 * 2);
+    */;
 
     /* Dimensions variables */
     int knobWidth = 150;
@@ -153,9 +149,19 @@ void EqualizerAudioProcessorEditor::resized()
     int spacingBKnobs = 250;
     int lopasshipassY = 695;
     int lopasshipassWidth = 135;
-    int lopassX = 80;
-    int hipassX = 900;
+    int lopassX = 900;
+    int hipassX = 80;
+    int fadersWidth = 80;
+    int fadersHeight = 362;
+    int fadersImageOffset = 4;
+    float fadersScaleFactor = 1.5;
+    int inputGainFaderX = 1230;
+    int outputGainFaderX = 1370;
+    int inoutGainFaderY = 490;
 
+    /* Input and output faders */
+    inputGainFader.setBounds(inputGainFaderX - fadersWidth * fadersScaleFactor + fadersImageOffset, inoutGainFaderY, fadersWidth * 2, fadersHeight);
+    outputGainFader.setBounds(outputGainFaderX - fadersWidth * fadersScaleFactor + fadersImageOffset, inoutGainFaderY, fadersWidth * 2, fadersHeight);
 
     lopassFrequency.setBounds(lopassX, lopasshipassY, lopasshipassWidth, lopasshipassWidth);
     hipassFrequency.setBounds(hipassX, lopasshipassY, lopasshipassWidth, lopasshipassWidth);

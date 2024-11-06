@@ -10,6 +10,7 @@
 
 #pragma once
 
+
 #include <JuceHeader.h>
 
 
@@ -17,6 +18,7 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
     CustomLookAndFeel();
+    ~CustomLookAndFeel() override;
 
     void drawLinearSlider(juce::Graphics& g, int x, int y, int width, int height,
          float sliderPos, float minSliderPos, float maxSliderPos,
@@ -25,6 +27,8 @@ public:
     void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height,
          float sliderPos, float rotaryStartAngle, float rotaryEndAngle, 
          juce::Slider& slider) override;
+
+    void drawLabel(juce::Graphics& g, juce::Label& label) override;
 
 private:
     juce::Image faderImage;
