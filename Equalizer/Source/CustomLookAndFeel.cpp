@@ -56,13 +56,25 @@ void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int wi
     const int imageWidth = lhKnobImage.getWidth();
     const int imageHeight = lhKnobImage.getHeight();
 
-    g.drawImage(lhKnobImage, x, y, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight);
+    auto radius = width * 0.5f;
+    auto centerX = x + width * 0.5f;
+    auto centerY = y + height * 0.5f;
+
+    float scaleX = static_cast<float>(width) / lhKnobImage.getWidth();
+    float scaleY = static_cast<float>(width) / lhKnobImage.getHeight();
+
+    auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+
+    juce::AffineTransform transform = juce::AffineTransform::scale(scaleX, scaleY).rotated(angle, centerX, centerY);
+
+    g.drawImageTransformed(lhKnobImage, transform);
 }   
 
 void CustomLookAndFeel::drawLabel(juce::Graphics& g, juce::Label& label)
 {
+    g.setColour(juce::Colours::blue);
     /*
-    g.setColour(juce::Colour(juce::uint8(255), 255, 255, 1.0f));
+
     g.fillRoundedRectangle(label.getLocalBounds().toFloat(), 3.0f);
 
 

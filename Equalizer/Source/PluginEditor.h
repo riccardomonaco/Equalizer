@@ -11,8 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "CustomLookAndFeel.h"
-#include "testLAF.h"
-
+#include "SelectorLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -30,6 +29,7 @@ public:
 private:
     //Customizable style class
     CustomLookAndFeel customLookAndFeel;
+    SelectorLookAndFeel selectorLookAndFeel;
 
     // Background image variable
     juce::Image bgImage;
@@ -58,6 +58,7 @@ private:
     juce::Slider highGain;
 
     juce::Slider lopassFrequency;
+    juce::Label lopassFrequencyLabel;
     //juce::Button lopassActive;
     
     juce::Slider hipassFrequency;

@@ -20,7 +20,9 @@ EqualizerAudioProcessor::EqualizerAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ), treeState(*this, nullptr, "PARAMETERS", createParameterLayout()), 
-                          testFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 500, 0.1f))
+                          lopassFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000, 0.1f)),
+                          hipassFilter(juce::dsp::IIR::Coefficients<float>::makeHighPass(44100, 20, 0.1f))
+
 #endif
 {
 }
@@ -40,10 +42,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     auto pGainIn = std::make_unique<juce::AudioParameterFloat>("input_gain", "Input Gain", -24.0, 12.0, 0.0);
     auto pGainOut = std::make_unique<juce::AudioParameterFloat>("output_gain","Output Gain",-24.0, 12.0, 0.0);
 
-    auto pLoPassFreq = std::make_unique<juce::AudioParameterFloat>("lopass_freq", "LowPass Frequency", 20, 20000, 20000);
-    auto pHiPassFreq = std::make_unique<juce::AudioParameterFloat>("hipass_freq", "HiPass Frequency", 20, 20000, 20);
+    auto pLoPassFreq = std::make_unique<juce::AudioParameterFloat>("lopass_freq", "LowPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20000);
+    auto pHiPassFreq = std::make_unique<juce::AudioParameterFloat>("hipass_freq", "HiPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20);
 
-    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 0);
+    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 30);
     auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -12, 12, 0);
 
     params.push_back(std::move(pGainIn));
@@ -131,9 +133,11 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     specs.maximumBlockSize = samplesPerBlock;
     specs.numChannels = getTotalNumOutputChannels();
 
-    //Setting the filter and cleaning the pending values
-    testFilter.prepare(specs);
-    testFilter.reset();
+    //Setting the filters and cleaning the pending values
+    lopassFilter.prepare(specs);
+    hipassFilter.prepare(specs);
+    lopassFilter.reset();
+    hipassFilter.reset();
 }
 
 void EqualizerAudioProcessor::releaseResources()
@@ -169,9 +173,12 @@ bool EqualizerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 #endif
 
 void EqualizerAudioProcessor::updateFilter() {
-    *testFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, 
+    *lopassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, 
                                                                          *treeState.getRawParameterValue("lopass_freq"), 
                                                                          0.1f);
+    *hipassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(lastSampleRate,
+                                                                          *treeState.getRawParameterValue("hipass_freq"),
+                                                                          0.1f);
 }
 
 void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -187,7 +194,8 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     //Creating the audio block to work with
     juce::dsp::AudioBlock<float> audioBlock(buffer);
     updateFilter();
-    testFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    hipassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    lopassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
 
     // Retrieving VOLUME INPUT value from slider
     float inputGain = *treeState.getRawParameterValue("input_gain");
@@ -233,7 +241,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
 
 
-    /*for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
@@ -243,7 +251,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             channelData[sample] *= rawOutputGain;
 
         }
-    }*/
+    }
 }
 
 //==============================================================================

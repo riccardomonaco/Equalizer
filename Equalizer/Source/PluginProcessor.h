@@ -62,7 +62,10 @@ private:
     
     // DSP Stuff ==================================================================
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 
-                                   juce::dsp::IIR::Coefficients<float>> testFilter;
+                                   juce::dsp::IIR::Coefficients<float>> lopassFilter;
+
+    juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>,
+                                   juce::dsp::IIR::Coefficients<float>> hipassFilter;
 
     // Parameters =================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
