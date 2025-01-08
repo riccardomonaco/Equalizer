@@ -27,6 +27,7 @@ EqualizerAudioProcessor::EqualizerAudioProcessor()
 #endif
 {
     initFilters();
+    BWPeakFilters = 50;
 }
 
 EqualizerAudioProcessor::~EqualizerAudioProcessor()
@@ -200,10 +201,12 @@ bool EqualizerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void EqualizerAudioProcessor::initFilters() {
     *lopassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000, 0.1f);
     *hipassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(44100, 20, 0.1f);
-    *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 30, 0.1f, 1.0f);
+    *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 30, 5.0f, 1.0f);
 }
 
 void EqualizerAudioProcessor::updateFilter() {
+
+
     *lopassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate,
         *treeState.getRawParameterValue("lopass_freq"),
         0.1f);
@@ -215,7 +218,7 @@ void EqualizerAudioProcessor::updateFilter() {
     {
         *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("sub_freq"),
-            0.1f,
+            *treeState.getRawParameterValue("sub_freq") / BWPeakFilters,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("sub_gain"))));
     }
     else if (*treeState.getRawParameterValue("sub_gain") == 0.0f)
@@ -223,12 +226,6 @@ void EqualizerAudioProcessor::updateFilter() {
     }
     else
     {
-     /*
-        *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makeNotch(lastSampleRate,
-            *treeState.getRawParameterValue("sub_freq"),
-            0.1f,
-            juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("sub_freq"))));
-    */
     }
 
     /*

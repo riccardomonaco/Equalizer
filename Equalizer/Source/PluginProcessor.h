@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "AudioSpectrum.h"
+#include "FiltersUnit.h"
 
 //==============================================================================
 /**
@@ -62,6 +63,7 @@ public:
 
 private:
     float lastSampleRate;
+    int BWPeakFilters;
     
     // DSP Stuff ==================================================================
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 
