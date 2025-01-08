@@ -157,6 +157,7 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     lopassFilter.prepare(specs);
     hipassFilter.prepare(specs);
     subFilter.prepare(specs);
+
     lopassFilter.reset();
     hipassFilter.reset();
     subFilter.reset();
@@ -200,7 +201,6 @@ void EqualizerAudioProcessor::initFilters() {
     *lopassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000, 0.1f);
     *hipassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(44100, 20, 0.1f);
     *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 30, 0.1f, 1.0f);
-
 }
 
 void EqualizerAudioProcessor::updateFilter() {
@@ -283,7 +283,6 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     hipassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     lopassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     subFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-
     audioBlock *= rawOutputGain;
 
 

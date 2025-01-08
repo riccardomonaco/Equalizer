@@ -20,6 +20,7 @@ public:
         setBufferSize(512);
         setSamplesPerBlock(256);
         setColours(juce::Colours::darkgrey, juce::Colours::white);
+        
     }
 private:
 };
