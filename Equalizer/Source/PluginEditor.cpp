@@ -14,9 +14,6 @@
 EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-
     /********************************************************
      *
      *   Adding and setting the INPUT VOLUME slider
@@ -30,7 +27,6 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "input_gain", inputGainFader);
     inputGainFader.setLookAndFeel(&customLookAndFeel);
-
 
     /********************************************************
      *
@@ -76,21 +72,20 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         (audioProcessor.treeState, "lopass_freq", lopassFrequency);
     lopassFrequency.setLookAndFeel(&customLookAndFeel);
 
-
     /********************************************************
      *
      *   Adding and setting the SUB FREQUENCIES input slider
      *
      ********************************************************/
     addAndMakeVisible(subFrequency);
-    subFrequency.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    subFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     subFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     subFrequency.setRange(30, 100, 20);
     subFrequency.setDoubleClickReturnValue(true, 30);
     subFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "sub_freq", subFrequency);
-    //subFrequency.setLookAndFeel(&selectorLookAndFeel);
+    subFrequency.setLookAndFeel(&selectorLookAndFeel);
 
     addAndMakeVisible(subGain);
     subGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -101,6 +96,82 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "sub_gain", subGain);
     subGain.setLookAndFeel(&customLookAndFeel);
+
+    /********************************************************
+    *
+    *   Adding and setting the BASS FREQUENCIES input slider
+    *
+    ********************************************************/
+    addAndMakeVisible(bassFrequency);
+    bassFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    bassFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    bassFrequency.setRange(150, 500, 50);
+    bassFrequency.setDoubleClickReturnValue(true, 150);
+    bassFrequencyAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "bass_freq", bassFrequency);
+    bassFrequency.setLookAndFeel(&selectorLookAndFeel);
+
+    addAndMakeVisible(bassGain);
+    bassGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    bassGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    bassGain.setRange(-12, 12, 1);
+    bassGain.setDoubleClickReturnValue(true, 0);
+    bassGainAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "bass_gain", bassGain);
+    bassGain.setLookAndFeel(&customLookAndFeel);
+
+    /********************************************************
+    *
+    *   Adding and setting the MID FREQUENCIES input slider
+    *
+    ********************************************************/
+    addAndMakeVisible(midFrequency);
+    midFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    midFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    midFrequency.setRange(1000, 5000, 1000);
+    midFrequency.setDoubleClickReturnValue(true, 1000);
+    midFrequencyAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "mid_freq", midFrequency);
+    midFrequency.setLookAndFeel(&selectorLookAndFeel);
+
+    addAndMakeVisible(midGain);
+    midGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    midGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    midGain.setRange(-12, 12, 1);
+    midGain.setDoubleClickReturnValue(true, 0);
+    midGainAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "mid_gain", midGain);
+    midGain.setLookAndFeel(&customLookAndFeel);
+
+    /********************************************************
+    *
+    *   Adding and setting the HIGH FREQUENCIES input slider
+    *
+    ********************************************************/
+    addAndMakeVisible(highFrequency);
+    highFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    highFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    highFrequency.setRange(8000, 16000, 2000);
+    highFrequency.setDoubleClickReturnValue(true, 8000);
+    highFrequencyAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "high_freq", highFrequency);
+    highFrequency.setLookAndFeel(&selectorLookAndFeel);
+
+    addAndMakeVisible(highGain);
+    highGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    highGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    highGain.setRange(-12, 12, 1);
+    highGain.setDoubleClickReturnValue(true, 0);
+    highGainAtch =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
+        (audioProcessor.treeState, "high_gain", highGain);
+    highGain.setLookAndFeel(&customLookAndFeel);
+
 
     //Setting the window size
     setSize(750 * 2, 450 * 2);
@@ -151,8 +222,6 @@ void EqualizerAudioProcessorEditor::resized()
     int inputGainFaderX = 1230;
     int outputGainFaderX = 1370;
     int inoutGainFaderY = 490;
-    //knobs 
-    int lilKnobsDistance = 85;
     //sub range
     int subGainX = 244;
     int subGainY = 495.5;
@@ -160,6 +229,9 @@ void EqualizerAudioProcessorEditor::resized()
     int subFrequencyX = 244;
     int subFrequencyY = 623;
     int subFrequencyWidth = 68;
+    //knobs 
+    int lilKnobsDistance = 117;
+    int lilKnobWidth = 68;
 
     /* Input and output faders */
     inputGainFader.setBounds(inputGainFaderX - fadersWidth * fadersScaleFactor + fadersImageOffset, inoutGainFaderY, fadersWidth * 2, fadersHeight);
@@ -174,31 +246,29 @@ void EqualizerAudioProcessorEditor::resized()
     subFrequency.setBounds(subFrequencyX, subFrequencyY, subFrequencyWidth, subFrequencyWidth);
 
 
-    /* Setting the others relative to the sub one */
-    bassFrequency.setBounds(subFrequency.getBounds().getX() + spacingBKnobs, 
-                            subFrequency.getBounds().getY(), 
-                            knobWidth, 
-                            knobHeight);
+    /* Setting bass pos and dim relative to the sub one */
+    bassGain.setBounds(subGainX + subGainWidth + lilKnobsDistance, subGainY, subGainWidth, subGainWidth);
+    bassFrequency.setBounds(subFrequencyX + subFrequencyWidth + lilKnobsDistance, subFrequencyY, subGainWidth, subGainWidth);
 
-    bassGain.setBounds(subGainX, subGainY, subGainWidth, subGainWidth);
-
-    midFrequency.setBounds(bassFrequency.getBounds().getX() + spacingBKnobs, 
+    /* Setting mid pos and dim relative to the sub one */
+    midFrequency.setBounds(bassFrequency.getBounds().getX() + lilKnobsDistance + lilKnobWidth,
                            bassFrequency.getBounds().getY(), 
-                           knobWidth, 
-                           knobHeight);
+                           lilKnobWidth,
+                           lilKnobWidth);
     
-    midGain.setBounds(bassGain.getBounds().getX() + spacingBKnobs, 
+    midGain.setBounds(bassGain.getBounds().getX() + lilKnobsDistance + lilKnobWidth,
                       bassGain.getBounds().getY(), 
-                      knobWidth, 
-                      knobHeight);
+                      lilKnobWidth,
+                      lilKnobWidth);
 
-    highFrequency.setBounds(midFrequency.getBounds().getX() + spacingBKnobs, 
+    /* Setting high pos and dim relative to the mid one */
+    highFrequency.setBounds(midFrequency.getBounds().getX() + lilKnobsDistance + lilKnobWidth,
                             midFrequency.getBounds().getY(), 
-                            knobWidth, 
-                            knobHeight);
+                            lilKnobWidth,
+                            lilKnobWidth);
 
-    highGain.setBounds(midFrequency.getBounds().getX() + spacingBKnobs, 
+    highGain.setBounds(midFrequency.getBounds().getX() + lilKnobsDistance + lilKnobWidth,
                        midGain.getBounds().getY(), 
-                       knobWidth, 
-                       knobHeight);
+                       lilKnobWidth,
+                       lilKnobWidth);
 }

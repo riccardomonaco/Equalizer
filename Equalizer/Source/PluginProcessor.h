@@ -9,11 +9,12 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "AudioSpectrum.h"
 
 //==============================================================================
 /**
 */
-class EqualizerAudioProcessor  : public juce::AudioProcessor
+class EqualizerAudioProcessor : public juce::AudioProcessor
 {
 public:
     //==============================================================================
@@ -28,6 +29,7 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
+    void initFilters();
     void updateFilter();
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
@@ -57,6 +59,7 @@ public:
     // Value Trees ================================================================
     juce::AudioProcessorValueTreeState treeState;
 
+
 private:
     float lastSampleRate;
     
@@ -67,10 +70,12 @@ private:
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>,
                                    juce::dsp::IIR::Coefficients<float>> hipassFilter;
 
+    juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>,
+                                   juce::dsp::IIR::Coefficients<float>> subFilter;
+
     // Parameters =================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EqualizerAudioProcessor)
-
 };

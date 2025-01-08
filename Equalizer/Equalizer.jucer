@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="E1xGR7" name="Equalizer" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="Thesis DSP"
-              pluginFormats="buildStandalone,buildVST,buildVST3">
+              pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="gkWq9L" name="Equalizer">
     <GROUP id="{93B9DB73-51F7-4FA8-E95F-88E8730E1145}" name="Assets">
       <FILE id="rtlpaD" name="KNOB_SELECTOR.png" compile="0" resource="1"
@@ -14,6 +14,7 @@
       <FILE id="X49rrg" name="EQ UI.jpg" compile="0" resource="1" file="Source/Assets/EQ UI.jpg"/>
     </GROUP>
     <GROUP id="{A9B44CE4-4DB6-FD55-BFFE-FCE4510B4D1E}" name="Source">
+      <FILE id="i9sLGu" name="AudioSpectrum.h" compile="0" resource="0" file="Source/AudioSpectrum.h"/>
       <FILE id="mcXrZL" name="SelectorLookAndFeel.cpp" compile="1" resource="0"
             file="Source/SelectorLookAndFeel.cpp"/>
       <FILE id="HoLqGi" name="SelectorLookAndFeel.h" compile="0" resource="0"
@@ -52,7 +53,8 @@
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="Equalizer"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="Equalizer"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Equalizer" enablePluginBinaryCopyStep="1"
+                       vst3BinaryLocation="C:\Program Files\Steinberg\VstPlugins"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../../../../../JUCE/modules"/>
