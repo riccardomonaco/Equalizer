@@ -26,7 +26,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     inputGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "input_gain", inputGainFader);
-    inputGainFader.setLookAndFeel(&customLookAndFeel);
+    //inputGainFader.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
      *
@@ -40,7 +40,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     outputGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "output_gain", outputGainFader);
-    outputGainFader.setLookAndFeel(&customLookAndFeel);
+    //outputGainFader.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
      *
@@ -55,7 +55,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     hipassFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "hipass_freq", hipassFrequency);
-    hipassFrequency.setLookAndFeel(&customLookAndFeel);
+    //hipassFrequency.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
      *
@@ -70,7 +70,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     lopassFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "lopass_freq", lopassFrequency);
-    lopassFrequency.setLookAndFeel(&customLookAndFeel);
+    //lopassFrequency.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
      *
@@ -85,7 +85,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     subFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "sub_freq", subFrequency);
-    subFrequency.setLookAndFeel(&selectorLookAndFeel);
+    //subFrequency.setLookAndFeel(&selectorLookAndFeel);
 
     addAndMakeVisible(subGain);
     subGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -95,7 +95,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     subGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "sub_gain", subGain);
-    subGain.setLookAndFeel(&customLookAndFeel);
+    //subGain.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
     *
@@ -120,7 +120,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     bassGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "bass_gain", bassGain);
-    bassGain.setLookAndFeel(&customLookAndFeel);
+    //bassGain.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
     *
@@ -135,7 +135,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     midFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "mid_freq", midFrequency);
-    midFrequency.setLookAndFeel(&selectorLookAndFeel);
+    //midFrequency.setLookAndFeel(&selectorLookAndFeel);
 
     addAndMakeVisible(midGain);
     midGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -145,7 +145,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     midGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "mid_gain", midGain);
-    midGain.setLookAndFeel(&customLookAndFeel);
+    //midGain.setLookAndFeel(&customLookAndFeel);
 
     /********************************************************
     *
@@ -160,7 +160,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     highFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "high_freq", highFrequency);
-    highFrequency.setLookAndFeel(&selectorLookAndFeel);
+    //highFrequency.setLookAndFeel(&selectorLookAndFeel);
 
     addAndMakeVisible(highGain);
     highGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -170,7 +170,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     highGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
         (audioProcessor.treeState, "high_gain", highGain);
-    highGain.setLookAndFeel(&customLookAndFeel);
+    //highGain.setLookAndFeel(&customLookAndFeel);
 
 
     //Setting the window size
@@ -188,10 +188,10 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
     bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_BG_SPC_png, BinaryData::EQ_BG_SPC_pngSize);
     
     //Rendering the image
-    g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
+    //g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
 
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    //g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
     //Text section
      /*
