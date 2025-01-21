@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "CustomLookAndFeel.h"
+#include "AudioSpectrum.h"
 
 //==============================================================================
 EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProcessor& p)
@@ -149,7 +150,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
 
     /********************************************************
     *
-    *   Adding and setting the HIGH FREQUENCIES input slider
+    *   Adding and setting the HIGH FREQUENCIES input slider 
     *
     ********************************************************/
     addAndMakeVisible(highFrequency);
@@ -172,7 +173,6 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         (audioProcessor.treeState, "high_gain", highGain);
     highGain.setLookAndFeel(&customLookAndFeel);
 
-
     //Setting the window size
     setSize(750 * 2, 450 * 2);
 }
@@ -189,16 +189,6 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
-
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    //g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    //Text section
-     /*
-        g.setColour(juce::Colours::white);
-        g.setFont (juce::FontOptions (15.0f));
-        g.drawFittedText ("EQUALIZER IN PROGRESS...", getLocalBounds(), juce::Justification::centred, 1);
-     */
 }
 
 void EqualizerAudioProcessorEditor::resized()
