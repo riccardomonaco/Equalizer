@@ -39,7 +39,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
 
     //Update number of reservation if adding params
-    params.reserve(1);
+    params.reserve(12);
     
     // Params definition
     auto pGainIn = std::make_unique<juce::AudioParameterFloat>("input_gain", "Input Gain", -24.0, 12.0, 0.0);
@@ -157,11 +157,17 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     //Setting the filters and cleaning the pending values
     lopassFilter.prepare(specs);
     hipassFilter.prepare(specs);
-    subFilter.prepare(specs);
-
     lopassFilter.reset();
     hipassFilter.reset();
+
+    subFilter.prepare(specs);
+    bassFilter.prepare(specs);
+    midFilter.prepare(specs);
+    highFilter.prepare(specs);
     subFilter.reset();
+    bassFilter.reset();
+    midFilter.reset();
+    highFilter.reset();
     
     //Clearing the spectrum visualizer component
 }
@@ -201,7 +207,12 @@ bool EqualizerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void EqualizerAudioProcessor::initFilters() {
     *lopassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000, 0.1f);
     *hipassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeHighPass(44100, 20, 0.1f);
+
     *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 30, 5.0f, 1.0f);
+    *bassFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 150, 5.0f, 1.0f);
+    *midFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 1000, 5.0f, 1.0f);
+    *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100, 8000, 5.0f, 1.0f);
+
 }
 
 void EqualizerAudioProcessor::updateFilter() {
@@ -214,6 +225,7 @@ void EqualizerAudioProcessor::updateFilter() {
         *treeState.getRawParameterValue("hipass_freq"),
         0.1f);
 
+    /* UPDATING SUB FILTER */
     if (*treeState.getRawParameterValue("sub_gain") != 0.0f)
     {
         *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
@@ -229,10 +241,53 @@ void EqualizerAudioProcessor::updateFilter() {
             1.0f);
     }
 
-    /*
-    float subRawGain = *treeState.getRawParameterValue("sub_gain");
-    float subGainFactor = juce::Decibels::decibelsToGain(subRawGain);
-    *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, *treeState.getRawParameterValue("sub_freq"), 1.f, subGainFactor);*/
+    /* UPDATING BASS FILTER */
+    if (*treeState.getRawParameterValue("bass_gain") != 0.0f)
+    {
+        *bassFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("bass_freq"),
+            *treeState.getRawParameterValue("bass_freq") / BWPeakFilters,
+            juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("bass_gain"))));
+    }
+    else
+    {
+        *bassFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("bass_freq"),
+            *treeState.getRawParameterValue("bass_freq") / BWPeakFilters,
+            1.0f);
+    }
+
+    /* UPDATING MID FILTER */
+    if (*treeState.getRawParameterValue("mid_gain") != 0.0f)
+    {
+        *midFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("mid_freq"),
+            *treeState.getRawParameterValue("mid_freq") / BWPeakFilters,
+            juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("mid_gain"))));
+    }
+    else
+    {
+        *midFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("mid_freq"),
+            *treeState.getRawParameterValue("mid_freq") / BWPeakFilters,
+            1.0f);
+    }
+
+    /* UPDATING HIGH FILTER */
+    if (*treeState.getRawParameterValue("high_gain") != 0.0f)
+    {
+        *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("high_freq"),
+            *treeState.getRawParameterValue("high_freq") / BWPeakFilters,
+            juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("high_gain"))));
+    }
+    else
+    {
+        *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("high_freq"),
+            *treeState.getRawParameterValue("high_freq") / BWPeakFilters,
+            1.0f);
+    }
 }
 
 void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -277,10 +332,17 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     juce::dsp::AudioBlock<float> audioBlock(buffer);
 
     audioBlock *= rawInputGain;
+
     updateFilter();
+
     hipassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     lopassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    
     subFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    bassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    midFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    highFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+
     audioBlock *= rawOutputGain;
 
 
@@ -318,10 +380,6 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
-            //channelData[sample] *= rawInputGain;
-
-            //channelData[sample] *= rawOutputGain;
-
         }
     }
 }
@@ -329,7 +387,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 //==============================================================================
 bool EqualizerAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 juce::AudioProcessorEditor* EqualizerAudioProcessor::createEditor()
