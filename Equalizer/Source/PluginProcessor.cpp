@@ -214,18 +214,19 @@ void EqualizerAudioProcessor::updateFilter() {
         *treeState.getRawParameterValue("hipass_freq"),
         0.1f);
 
-    if (*treeState.getRawParameterValue("sub_gain") > 0.0f)
+    if (*treeState.getRawParameterValue("sub_gain") != 0.0f)
     {
         *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("sub_freq"),
             *treeState.getRawParameterValue("sub_freq") / BWPeakFilters,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("sub_gain"))));
     }
-    else if (*treeState.getRawParameterValue("sub_gain") == 0.0f)
-    {
-    }
     else
     {
+        *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
+            *treeState.getRawParameterValue("sub_freq"),
+            *treeState.getRawParameterValue("sub_freq") / BWPeakFilters,
+            1.0f);
     }
 
     /*
