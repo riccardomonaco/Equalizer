@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "AudioSpectrum.h"
+#include "AnalyzerComponent.h"
 
 //==============================================================================
 /**
@@ -59,12 +59,16 @@ public:
     // Value Trees ================================================================
     juce::AudioProcessorValueTreeState treeState;
 
+    // Spectrum analyzer ==========================================================
+    void setAnalyzerComponent(AnalyzerComponent* analyzer);
+    AnalyzerComponent analyzer;
+
 
 private:
     float lastSampleRate;
     int BWPeakFilters;
     
-    // DSP Stuff ==================================================================
+    // Filters ==================================================================
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 
                                    juce::dsp::IIR::Coefficients<float>> lopassFilter;
 

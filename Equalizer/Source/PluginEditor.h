@@ -12,7 +12,7 @@
 #include "PluginProcessor.h"
 #include "CustomLookAndFeel.h"
 #include "SelectorLookAndFeel.h"
-#include "AudioSpectrum.h"
+#include "AnalyzerComponent.h"
 
 //==============================================================================
 /**
@@ -27,13 +27,13 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    AnalyzerComponent analyzer;
+
+
 private:
     //Customizable style class
     CustomLookAndFeel customLookAndFeel;
     SelectorLookAndFeel selectorLookAndFeel;
-
-    //Spectrum Analyzer class
-    AudioSpectrum audioSpectrum;
 
     // Background image variable
     juce::Image bgImage;

@@ -14,9 +14,8 @@
       <FILE id="X49rrg" name="EQ UI.jpg" compile="0" resource="1" file="Source/Assets/EQ UI.jpg"/>
     </GROUP>
     <GROUP id="{A9B44CE4-4DB6-FD55-BFFE-FCE4510B4D1E}" name="Source">
-      <FILE id="qBfZUo" name="AudioSpectrum.cpp" compile="1" resource="0"
-            file="Source/AudioSpectrum.cpp"/>
-      <FILE id="Z5Ujbi" name="AudioSpectrum.h" compile="0" resource="0" file="Source/AudioSpectrum.h"/>
+      <FILE id="psPkLu" name="AnalyzerComponent.h" compile="0" resource="0"
+            file="Source/AnalyzerComponent.h"/>
       <FILE id="mcXrZL" name="SelectorLookAndFeel.cpp" compile="1" resource="0"
             file="Source/SelectorLookAndFeel.cpp"/>
       <FILE id="HoLqGi" name="SelectorLookAndFeel.h" compile="0" resource="0"

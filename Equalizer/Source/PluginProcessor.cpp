@@ -8,6 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "AnalyzerComponent.h"
+
 #include <iostream> // Per std::cout e std::endl
 #include <windows.h>
 
@@ -22,8 +24,9 @@ EqualizerAudioProcessor::EqualizerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ), treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
-
+                       ), 
+treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
+                      
 #endif
 {
     initFilters();
@@ -332,19 +335,15 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     juce::dsp::AudioBlock<float> audioBlock(buffer);
 
     audioBlock *= rawInputGain;
-
     updateFilter();
-
     hipassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     lopassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-    
     subFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     bassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     midFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     highFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-
     audioBlock *= rawOutputGain;
-
+    //analyzer.pushAudioSamples(audioBlock);
 
     //Creating the sub band pass filter
     /*
@@ -380,6 +379,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
+
         }
     }
 }
@@ -414,4 +414,8 @@ void EqualizerAudioProcessor::setStateInformation (const void* data, int sizeInB
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new EqualizerAudioProcessor();
+}
+
+void EqualizerAudioProcessor::setAnalyzerComponent(AnalyzerComponent* analyzer) {
+    analyzer = analyzer;
 }

@@ -9,7 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "CustomLookAndFeel.h"
-#include "AudioSpectrum.h"
+#include "AnalyzerComponent.h"
 
 //==============================================================================
 EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProcessor& p)
@@ -173,6 +173,9 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         (audioProcessor.treeState, "high_gain", highGain);
     highGain.setLookAndFeel(&customLookAndFeel);
 
+    p.setAnalyzerComponent(&analyzer);
+    addAndMakeVisible(analyzer);
+
     //Setting the window size
     setSize(750 * 2, 450 * 2);
 }
@@ -189,6 +192,8 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
+
+    analyzer.paint(g);
 }
 
 void EqualizerAudioProcessorEditor::resized()
@@ -261,4 +266,6 @@ void EqualizerAudioProcessorEditor::resized()
                        midGain.getBounds().getY(), 
                        lilKnobWidth,
                        lilKnobWidth);
+
+    analyzer.setBounds(50, 50, 500, 500);
 }
