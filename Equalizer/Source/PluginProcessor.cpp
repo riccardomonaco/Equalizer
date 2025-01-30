@@ -342,8 +342,13 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     bassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     midFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     highFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    if (analyzerComponent != nullptr) {
+        analyzerComponent->pushNextBlockIntoFifo(audioBlock);
+    }
     audioBlock *= rawOutputGain;
-    //analyzer.pushAudioSamples(audioBlock);
+
+
+
 
     //Creating the sub band pass filter
     /*
@@ -379,7 +384,9 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
-
+            if (analyzerComponent != nullptr) {
+                //analyzerComponent->pushNextSampleIntoFifo(sample);
+            }
         }
     }
 }
@@ -417,5 +424,5 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 void EqualizerAudioProcessor::setAnalyzerComponent(AnalyzerComponent* analyzer) {
-    analyzer = analyzer;
+    this->analyzerComponent = analyzer;
 }

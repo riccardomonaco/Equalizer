@@ -175,7 +175,6 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
 
     p.setAnalyzerComponent(&analyzer);
     addAndMakeVisible(analyzer);
-
     //Setting the window size
     setSize(750 * 2, 450 * 2);
 }
@@ -192,8 +191,6 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
-
-    analyzer.paint(g);
 }
 
 void EqualizerAudioProcessorEditor::resized()
@@ -267,5 +264,5 @@ void EqualizerAudioProcessorEditor::resized()
                        lilKnobWidth,
                        lilKnobWidth);
 
-    analyzer.setBounds(50, 50, 500, 500);
+    analyzer.setBounds(60, 60, 990, 330);
 }

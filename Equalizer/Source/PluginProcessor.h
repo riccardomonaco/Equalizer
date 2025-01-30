@@ -61,7 +61,7 @@ public:
 
     // Spectrum analyzer ==========================================================
     void setAnalyzerComponent(AnalyzerComponent* analyzer);
-    AnalyzerComponent analyzer;
+    AnalyzerComponent* analyzerComponent = nullptr;
 
 
 private:
