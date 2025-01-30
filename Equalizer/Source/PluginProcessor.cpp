@@ -30,7 +30,12 @@ treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
     initFilters();
-    BWPeakFilters = 50;
+    //Bandwidth filters value
+    //
+    BWPeakFilterSub = 50;
+    BWPeakFilterBass = 100;
+    BWPeakFilterMid = 250;
+    BWPeakFilterHigh = 500;
 }
 
 EqualizerAudioProcessor::~EqualizerAudioProcessor()
@@ -52,16 +57,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     auto pHiPassFreq = std::make_unique<juce::AudioParameterFloat>("hipass_freq", "HiPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20);
 
     auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 30);
-    auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -12, 12, 0.0);
+    auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -24, 24, 0.0);
 
     auto pBassFreq = std::make_unique<juce::AudioParameterFloat>("bass_freq", "Bass Frequency", 150, 500, 150);
-    auto pBassGain = std::make_unique<juce::AudioParameterFloat>("bass_gain", "Bass Gain", -12, 12, 0);
+    auto pBassGain = std::make_unique<juce::AudioParameterFloat>("bass_gain", "Bass Gain", -24, 24, 0);
 
     auto pMidFreq = std::make_unique<juce::AudioParameterFloat>("mid_freq", "Mid Frequency", 1000, 5000, 1000);
-    auto pMidGain = std::make_unique<juce::AudioParameterFloat>("mid_gain", "Mid Gain", -12, 12, 0);
+    auto pMidGain = std::make_unique<juce::AudioParameterFloat>("mid_gain", "Mid Gain", -24, 24, 0);
 
     auto pHighFreq = std::make_unique<juce::AudioParameterFloat>("high_freq", "High Frequency", 8000, 16000, 8000);
-    auto pHighGain = std::make_unique<juce::AudioParameterFloat>("high_gain", "High Gain", -12, 12, 0);
+    auto pHighGain = std::make_unique<juce::AudioParameterFloat>("high_gain", "High Gain", -24, 24, 0);
 
     params.push_back(std::move(pGainIn));
     params.push_back(std::move(pGainOut));
@@ -233,14 +238,14 @@ void EqualizerAudioProcessor::updateFilter() {
     {
         *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("sub_freq"),
-            *treeState.getRawParameterValue("sub_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("sub_freq") / BWPeakFilterSub,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("sub_gain"))));
     }
     else
     {
         *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("sub_freq"),
-            *treeState.getRawParameterValue("sub_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("sub_freq") / BWPeakFilterSub,
             1.0f);
     }
 
@@ -249,14 +254,14 @@ void EqualizerAudioProcessor::updateFilter() {
     {
         *bassFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("bass_freq"),
-            *treeState.getRawParameterValue("bass_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("bass_freq") / BWPeakFilterBass,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("bass_gain"))));
     }
     else
     {
         *bassFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("bass_freq"),
-            *treeState.getRawParameterValue("bass_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("bass_freq") / BWPeakFilterBass,
             1.0f);
     }
 
@@ -265,14 +270,14 @@ void EqualizerAudioProcessor::updateFilter() {
     {
         *midFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("mid_freq"),
-            *treeState.getRawParameterValue("mid_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("mid_freq") / BWPeakFilterMid,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("mid_gain"))));
     }
     else
     {
         *midFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("mid_freq"),
-            *treeState.getRawParameterValue("mid_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("mid_freq") / BWPeakFilterMid,
             1.0f);
     }
 
@@ -281,14 +286,14 @@ void EqualizerAudioProcessor::updateFilter() {
     {
         *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("high_freq"),
-            *treeState.getRawParameterValue("high_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("high_freq") / BWPeakFilterHigh,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("high_gain"))));
     }
     else
     {
         *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
             *treeState.getRawParameterValue("high_freq"),
-            *treeState.getRawParameterValue("high_freq") / BWPeakFilters,
+            *treeState.getRawParameterValue("high_freq") / BWPeakFilterHigh,
             1.0f);
     }
 }

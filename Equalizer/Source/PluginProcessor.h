@@ -66,7 +66,10 @@ public:
 
 private:
     float lastSampleRate;
-    int BWPeakFilters;
+    int BWPeakFilterSub;
+    int BWPeakFilterBass;
+    int BWPeakFilterMid;
+    int BWPeakFilterHigh;
     
     // Filters ==================================================================
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 

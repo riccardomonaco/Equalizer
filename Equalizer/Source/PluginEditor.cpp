@@ -91,7 +91,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     addAndMakeVisible(subGain);
     subGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     subGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    subGain.setRange(-12, 12, 1);
+    subGain.setRange(-24, 24, 1);
     subGain.setDoubleClickReturnValue(true, 0);
     subGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
@@ -116,7 +116,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     addAndMakeVisible(bassGain);
     bassGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     bassGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    bassGain.setRange(-12, 12, 1);
+    bassGain.setRange(-24, 24, 1);
     bassGain.setDoubleClickReturnValue(true, 0);
     bassGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
@@ -141,7 +141,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     addAndMakeVisible(midGain);
     midGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     midGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    midGain.setRange(-12, 12, 1);
+    midGain.setRange(-24, 24, 1);
     midGain.setDoubleClickReturnValue(true, 0);
     midGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
@@ -166,7 +166,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     addAndMakeVisible(highGain);
     highGain.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     highGain.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    highGain.setRange(-12, 12, 1);
+    highGain.setRange(-24, 24, 1);
     highGain.setDoubleClickReturnValue(true, 0);
     highGainAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>
