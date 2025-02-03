@@ -12,6 +12,7 @@
 
 #include <iostream> // Per std::cout e std::endl
 #include <windows.h>
+#include <string>
 
 
 //==============================================================================
@@ -56,7 +57,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     auto pLoPassFreq = std::make_unique<juce::AudioParameterFloat>("lopass_freq", "LowPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20000);
     auto pHiPassFreq = std::make_unique<juce::AudioParameterFloat>("hipass_freq", "HiPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20);
 
-    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 30);
+    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>(
+        "sub_freq",
+        "Sub Frequency",
+         30, 100, 30);
+
     auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -24, 24, 0.0);
 
     auto pBassFreq = std::make_unique<juce::AudioParameterFloat>("bass_freq", "Bass Frequency", 150, 500, 150);
@@ -90,6 +95,37 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
 }
 
 //==============================================================================
+float EqualizerAudioProcessor::valueToSteps(float value, int type){
+     
+    switch (type) {
+    case sub:
+        if (value < 50) return 30;
+        else if (value < 70) return 60;
+        else if (value < 95) return 90;
+        else return 100;
+        break;
+    case bass:
+        if (value < 269) return 150;
+        else if (value < 329) return 200;
+        else if (value < 379) return 350;
+        else return 500;
+        break;
+    case mid:
+        if (value < 1500) return 1000;
+        else if (value < 3000) return 2000;
+        else if (value < 4500) return 3500;
+        else return 5000;
+        break;
+    case high:
+        if (value < 9000) return 8000;
+        else if (value < 11500) return 10000;
+        else if (value < 14000) return 12000;
+        else return 16000;
+        break;
+    }
+
+}
+
 const juce::String EqualizerAudioProcessor::getName() const
 {
     return JucePlugin_Name;
@@ -237,7 +273,7 @@ void EqualizerAudioProcessor::updateFilter() {
     if (*treeState.getRawParameterValue("sub_gain") != 0.0f)
     {
         *subFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
-            *treeState.getRawParameterValue("sub_freq"),
+            valueToSteps(*treeState.getRawParameterValue("sub_freq"), sub),
             *treeState.getRawParameterValue("sub_freq") / BWPeakFilterSub,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("sub_gain"))));
     }
@@ -253,7 +289,7 @@ void EqualizerAudioProcessor::updateFilter() {
     if (*treeState.getRawParameterValue("bass_gain") != 0.0f)
     {
         *bassFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
-            *treeState.getRawParameterValue("bass_freq"),
+            valueToSteps(*treeState.getRawParameterValue("bass_freq"), bass),
             *treeState.getRawParameterValue("bass_freq") / BWPeakFilterBass,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("bass_gain"))));
     }
@@ -269,7 +305,7 @@ void EqualizerAudioProcessor::updateFilter() {
     if (*treeState.getRawParameterValue("mid_gain") != 0.0f)
     {
         *midFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
-            *treeState.getRawParameterValue("mid_freq"),
+            valueToSteps(*treeState.getRawParameterValue("mid_freq"), mid),
             *treeState.getRawParameterValue("mid_freq") / BWPeakFilterMid,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("mid_gain"))));
     }
@@ -285,7 +321,7 @@ void EqualizerAudioProcessor::updateFilter() {
     if (*treeState.getRawParameterValue("high_gain") != 0.0f)
     {
         *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate,
-            *treeState.getRawParameterValue("high_freq"),
+            valueToSteps(*treeState.getRawParameterValue("high_freq"), high),
             *treeState.getRawParameterValue("high_freq") / BWPeakFilterHigh,
             juce::Decibels::decibelsToGain(float(*treeState.getRawParameterValue("high_gain"))));
     }

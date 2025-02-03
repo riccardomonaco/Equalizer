@@ -81,7 +81,7 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     addAndMakeVisible(subFrequency);
     subFrequency.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     subFrequency.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    subFrequency.setRange(30, 100, 20);
+    subFrequency.setRange(30, 100, 30);
     subFrequency.setDoubleClickReturnValue(true, 30);
     subFrequencyAtch =
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>

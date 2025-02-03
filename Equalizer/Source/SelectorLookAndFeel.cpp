@@ -35,9 +35,26 @@ void SelectorLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int 
     float scaleX = static_cast<float>(width) / selectorImage.getWidth();
     float scaleY = static_cast<float>(width) / selectorImage.getHeight();
 
-    auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+    // Definizione dei 4 step fissi
+    constexpr int numSteps = 4;
+    constexpr float stepValues[numSteps] = { 0.26f, 0.42f, 0.58f, 0.73f };
 
-    juce::AffineTransform transform = juce::AffineTransform::scale(scaleX, scaleY).rotated(angle, centerX, centerY);
+    // Trova il valore più vicino tra gli step
+    float closestStep = stepValues[0];
+    for (int i = 1; i < numSteps; ++i)
+    {
+        if (std::abs(sliderPos - stepValues[i]) < std::abs(sliderPos - closestStep))
+        {
+            closestStep = stepValues[i];
+        }
+    }
+
+    // Calcola l'angolo corretto per il valore più vicino
+    auto angle = rotaryStartAngle + closestStep * (rotaryEndAngle - rotaryStartAngle);
+
+    juce::AffineTransform transform =
+        juce::AffineTransform::scale(scaleX, scaleY)
+        .rotated(angle, centerX, centerY);
 
     g.drawImageTransformed(selectorImage, transform);
 }

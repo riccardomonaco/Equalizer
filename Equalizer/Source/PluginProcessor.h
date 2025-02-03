@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <string.h>
 #include <JuceHeader.h>
 #include "AnalyzerComponent.h"
 
@@ -31,6 +32,7 @@ public:
 
     void initFilters();
     void updateFilter();
+    float valueToSteps(float value, int type);
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
@@ -63,6 +65,13 @@ public:
     void setAnalyzerComponent(AnalyzerComponent* analyzer);
     AnalyzerComponent* analyzerComponent = nullptr;
 
+    enum
+    {
+        sub = 0,
+        bass = 1,
+        mid = 2,
+        high = 3
+    };
 
 private:
     float lastSampleRate;
