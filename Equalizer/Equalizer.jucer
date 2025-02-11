@@ -5,6 +5,7 @@
               pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="gkWq9L" name="Equalizer">
     <GROUP id="{93B9DB73-51F7-4FA8-E95F-88E8730E1145}" name="Assets">
+      <FILE id="TITffd" name="LED_RED_ON.png" compile="0" resource="1" file="../../../LED_RED_ON.png"/>
       <FILE id="rtlpaD" name="KNOB_SELECTOR.png" compile="0" resource="1"
             file="Source/Assets/KNOB_SELECTOR.png"/>
       <FILE id="ru5jsz" name="KNOB_ROTARY.png" compile="0" resource="1" file="Source/Assets/KNOB_ROTARY.png"/>

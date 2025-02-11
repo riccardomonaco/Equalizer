@@ -131,9 +131,9 @@ public:
 
     enum
     {
-        fftOrder = 11,             
-        fftSize = 1 << fftOrder,  
-        scopeSize = 512             
+        fftOrder = 12,             
+        fftSize = 1 << fftOrder,  //2^fftOrder
+        scopeSize = 1024 //Finestra di dati
     };
 
 private:
