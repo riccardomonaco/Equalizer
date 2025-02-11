@@ -32,7 +32,6 @@ treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 {
     initFilters();
     //Bandwidth filters value
-    //
     BWPeakFilterSub = 50;
     BWPeakFilterBass = 100;
     BWPeakFilterMid = 250;
@@ -95,6 +94,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
 }
 
 //==============================================================================
+/*
+* hardcoded values to match frequency process and step slider position
+*/
 float EqualizerAudioProcessor::valueToSteps(float value, int type){
      
     switch (type) {
@@ -111,15 +113,15 @@ float EqualizerAudioProcessor::valueToSteps(float value, int type){
         else return 500;
         break;
     case mid:
-        if (value < 1500) return 1000;
+        if (value < 2350) return 1000;
         else if (value < 3000) return 2000;
-        else if (value < 4500) return 3500;
+        else if (value < 3620) return 3500;
         else return 5000;
         break;
     case high:
-        if (value < 9000) return 8000;
-        else if (value < 11500) return 10000;
-        else if (value < 14000) return 12000;
+        if (value < 10730) return 8000;
+        else if (value < 12010) return 10000;
+        else if (value < 13240) return 12000;
         else return 16000;
         break;
     }
@@ -213,13 +215,13 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     midFilter.reset();
     highFilter.reset();
     
-    //Clearing the spectrum visualizer component
+    //Setting sample rate for spectrum visualizer component
+
 }
 
 void EqualizerAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+    //analyzerComponent->stopTimer();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -383,51 +385,19 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     bassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     midFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     highFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+
     if (analyzerComponent != nullptr) {
         analyzerComponent->pushNextBlockIntoFifo(audioBlock);
+        //analyzerComponent->setSampleRate(this->getSampleRate());
     }
     audioBlock *= rawOutputGain;
-
-
-
-
-    //Creating the sub band pass filter
-    /*
-    if (subGain >= 0) {
-        subCoefficients = juce::dsp::IIR::Coefficients<float>::makeBandPass(44100, subFrequency);
-    }
-    else {
-        subCoefficients = juce::dsp::IIR::Coefficients<float>::makeNotch(44100, subFrequency);
-    }*/
-
-    //subFilter = juce::dsp::IIR::Filter<float>::Filter(subCoefficients);
-    //subFilter.process(context);
-    
-    /*
-    // Retrieving BASS FREQUENCY and GAIN value from slider
-    int bassFrequency = *treeState.getRawParameterValue("bass_freq");
-    int bassGain = *treeState.getRawParameterValue("bass_gain");
-    int rawBassGain = juce::Decibels::decibelsToGain(bassGain);
-
-    // Retrieving MID FREQUENCY and GAIN value from slider
-    int midFrequency = *treeState.getRawParameterValue("mid_freq");
-    int midGain = *treeState.getRawParameterValue("mid_gain");
-    int rawMidGain = juce::Decibels::decibelsToGain(midGain);
-
-    // Retrieving HIGH FREQUENCY and GAIN value from slider
-    int highFrequency = *treeState.getRawParameterValue("high_freq");
-    int highGain = *treeState.getRawParameterValue("high_gain");
-    int rawHighGain = juce::Decibels::decibelsToGain(highGain);
-    */
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
         {
-            if (analyzerComponent != nullptr) {
-                //analyzerComponent->pushNextSampleIntoFifo(sample);
-            }
+
         }
     }
 }

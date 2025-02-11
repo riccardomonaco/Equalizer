@@ -10,8 +10,6 @@
       <FILE id="ru5jsz" name="KNOB_ROTARY.png" compile="0" resource="1" file="Source/Assets/KNOB_ROTARY.png"/>
       <FILE id="kt6jef" name="EQ_BG_SPC.png" compile="0" resource="1" file="Source/Assets/EQ_BG_SPC.png"/>
       <FILE id="F74q4J" name="FADER.png" compile="0" resource="1" file="Source/Assets/FADER.png"/>
-      <FILE id="Bq5Tal" name="EQ UI VOL.jpg" compile="0" resource="1" file="Source/Assets/EQ UI VOL.jpg"/>
-      <FILE id="X49rrg" name="EQ UI.jpg" compile="0" resource="1" file="Source/Assets/EQ UI.jpg"/>
     </GROUP>
     <GROUP id="{A9B44CE4-4DB6-FD55-BFFE-FCE4510B4D1E}" name="Source">
       <FILE id="psPkLu" name="AnalyzerComponent.h" compile="0" resource="0"

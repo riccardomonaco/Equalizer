@@ -23,6 +23,7 @@ public:
         : forwardFFT(fftOrder),
         window(fftSize, juce::dsp::WindowingFunction<float>::hann)
     {
+        sampleRate = 44100.0;
         startTimerHz(30);
     }
 
@@ -65,23 +66,31 @@ public:
     void drawNextFrameOfSpectrum()
     {
         // first apply a windowing function to our data
-        window.multiplyWithWindowingTable(fftData, fftSize);       // [1]
+        window.multiplyWithWindowingTable(fftData, fftSize);
 
         // then render our FFT data..
-        forwardFFT.performFrequencyOnlyForwardTransform(fftData);  // [2]
+        forwardFFT.performFrequencyOnlyForwardTransform(fftData);
 
-        auto mindB = -100.0f;
+        auto mindB = -50.0f;
         auto maxdB = 0.0f;
 
-        for (int i = 0; i < scopeSize; ++i)                         // [3]
+        for (int i = 0; i < scopeSize; ++i)
         {
-            auto skewedProportionX = 1.0f - std::exp(std::log(1.0f - (float)i / (float)scopeSize) * 0.2f);
-            auto fftDataIndex = juce::jlimit(0, fftSize / 2, (int)(skewedProportionX * (float)fftSize * 0.5f));
-            auto level = juce::jmap(juce::jlimit(mindB, maxdB, juce::Decibels::gainToDecibels(fftData[fftDataIndex])
-                - juce::Decibels::gainToDecibels((float)fftSize)),
-                mindB, maxdB, 0.0f, 1.0f);
+            // Mapping logaritmico della frequenza
+            auto logMinFreq = std::log10(20.0f);  // Frequenza minima udibile (20 Hz)
+            auto logMaxFreq = std::log10(20000.0f); // Frequenza massima udibile (20 kHz)
+            auto logFreq = logMinFreq + (logMaxFreq - logMinFreq) * ((float)i / (float)scopeSize);
+            auto freq = std::pow(10.0f, logFreq);
 
-            scopeData[i] = level;                                   // [4]
+            // Trova l'indice corrispondente nell'array FFT
+            auto fftDataIndex = juce::jlimit(0, fftSize / 2, (int)((freq / (sampleRate / 2)) * (fftSize / 2)));
+
+            // Converte in dB e normalizza
+            auto level = juce::jmap(juce::jlimit(mindB, maxdB,
+                juce::Decibels::gainToDecibels(fftData[fftDataIndex]) -
+                juce::Decibels::gainToDecibels((float)fftSize)),
+                mindB, maxdB, 0.0f, 1.0f);
+            scopeData[i] = level;
         }
     }
 
@@ -116,6 +125,10 @@ public:
         drawFrame(g);
     }
 
+    void setSampleRate(double sRate) {
+        sampleRate = sRate;
+    }
+
     enum
     {
         fftOrder = 11,             
@@ -126,7 +139,8 @@ public:
 private:
     juce::dsp::FFT forwardFFT;                      
     juce::dsp::WindowingFunction<float> window;     
-
+   
+    double sampleRate;
     float fifo[fftSize];                           
     float fftData[2 * fftSize];                    
     int fifoIndex = 0;                              

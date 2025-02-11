@@ -173,8 +173,10 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
         (audioProcessor.treeState, "high_gain", highGain);
     highGain.setLookAndFeel(&customLookAndFeel);
 
+    //Setting and adding spectrum analyzer
     p.setAnalyzerComponent(&analyzer);
     addAndMakeVisible(analyzer);
+
     //Setting the window size
     setSize(750 * 2, 450 * 2);
 }
