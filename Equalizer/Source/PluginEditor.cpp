@@ -190,9 +190,21 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
 {
     //Instantiating background image
     bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_BG_SPC_png, BinaryData::EQ_BG_SPC_pngSize);
+    ledOnImage = juce::ImageCache::getFromMemory(BinaryData::LED_RED_ON_png, BinaryData::LED_RED_ON_pngSize);
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
+    
+    //Rendering active leds
+    if (audioProcessor.getStateHiPass()) {
+        g.drawImage(ledOnImage, 193, 819, 50, 50, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
+    }
+    else repaint();
+
+    if (audioProcessor.getStateLoPass()) {
+        g.drawImage(ledOnImage, 870, 819, 50, 50, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
+    }
+    else repaint();
 }
 
 void EqualizerAudioProcessorEditor::resized()
@@ -267,4 +279,31 @@ void EqualizerAudioProcessorEditor::resized()
                        lilKnobWidth);
 
     analyzer.setBounds(60, 60, 990, 330);
+}
+
+void EqualizerAudioProcessorEditor::timerCallback()
+{
+    /*
+    if (++framesElapsed > 100)
+    {
+        framesElapsed = 0;
+        maxRmsLeft = -100.f;
+        maxRmsRight = -100.f;
+    }
+
+    const auto leftGain = audioProcessor.getRmsLevel(0);
+    const auto rightGain = audioProcessor.getRmsLevel(1);
+    if (leftGain > maxRmsLeft)
+        maxRmsLeft = leftGain;
+    if (rightGain > maxRmsRight)
+        maxRmsRight = rightGain;
+    currentRmsValue.setText(String{ leftGain, 2 } + "   " + String{ rightGain, 2 }, sendNotification);
+    maxRmsValue.setText(String{ maxRmsLeft, 2 } + "   " + String{ maxRmsRight, 2 }, sendNotification);
+
+    DbMeterL.setLevel(leftGain);
+    DbMeterL.repaint();
+
+    DbMeterR.setLevel(rightGain);
+    DbMeterR.repaint();
+    */
 }

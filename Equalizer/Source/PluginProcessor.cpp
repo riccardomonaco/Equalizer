@@ -31,11 +31,16 @@ treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
     initFilters();
+
     //Bandwidth filters value
     BWPeakFilterSub = 50;
     BWPeakFilterBass = 100;
     BWPeakFilterMid = 250;
     BWPeakFilterHigh = 500;
+
+    //init variables
+    lopassActive = false;
+    hipassActive = false;
 }
 
 EqualizerAudioProcessor::~EqualizerAudioProcessor()
@@ -56,11 +61,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::cre
     auto pLoPassFreq = std::make_unique<juce::AudioParameterFloat>("lopass_freq", "LowPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20000);
     auto pHiPassFreq = std::make_unique<juce::AudioParameterFloat>("hipass_freq", "HiPass Frequency", juce::NormalisableRange<float>(20, 20000, 0.f, 0.25f), 20);
 
-    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>(
-        "sub_freq",
-        "Sub Frequency",
-         30, 100, 30);
-
+    auto pSubFreq = std::make_unique<juce::AudioParameterFloat>("sub_freq", "Sub Frequency", 30, 100, 30);
     auto pSubGain = std::make_unique<juce::AudioParameterFloat>("sub_gain", "Sub Gain", -24, 24, 0.0);
 
     auto pBassFreq = std::make_unique<juce::AudioParameterFloat>("bass_freq", "Bass Frequency", 150, 500, 150);
@@ -214,8 +215,6 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     bassFilter.reset();
     midFilter.reset();
     highFilter.reset();
-    
-    //Setting sample rate for spectrum visualizer component
 
 }
 
@@ -379,8 +378,17 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
     audioBlock *= rawInputGain;
     updateFilter();
-    hipassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-    lopassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+
+    if (*treeState.getRawParameterValue("lopass_freq") < 20000) {
+        lopassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+        lopassActive = true;
+    } else lopassActive = false;
+
+    if (*treeState.getRawParameterValue("hipass_freq") > 20) {
+        hipassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+        hipassActive = true;
+    } else hipassActive = false;
+
     subFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     bassFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
     midFilter.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
@@ -388,10 +396,11 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
     if (analyzerComponent != nullptr) {
         analyzerComponent->pushNextBlockIntoFifo(audioBlock);
-        //analyzerComponent->setSampleRate(this->getSampleRate());
     }
+
     audioBlock *= rawOutputGain;
 
+    /*SAMPLE BY SAMPLE PROCESSING
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
@@ -400,6 +409,7 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
         }
     }
+    */
 }
 
 //==============================================================================
@@ -436,4 +446,22 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 void EqualizerAudioProcessor::setAnalyzerComponent(AnalyzerComponent* analyzer) {
     this->analyzerComponent = analyzer;
+}
+
+bool EqualizerAudioProcessor::getStateHiPass() {
+    return hipassActive;
+}
+
+bool EqualizerAudioProcessor::getStateLoPass() {
+    return lopassActive;
+}
+
+float EqualizerAudioProcessor::getRmsLevel(const int channel)
+{
+    /*
+    jassert(channel >= 0 && channel < rmsCalculationBuffer.getNumChannels());
+    rmsFifo.pull(rmsCalculationBuffer.getWritePointer(channel), channel, rmsWindowSize);
+    processLevelValue(rmsLevels[channel], Decibels::gainToDecibels(rmsCalculationBuffer.getRMSLevel(channel, 0, rmsWindowSize)));
+    return rmsLevels[channel].getCurrentValue();
+    */
 }

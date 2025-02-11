@@ -13,11 +13,12 @@
 #include "CustomLookAndFeel.h"
 #include "SelectorLookAndFeel.h"
 #include "AnalyzerComponent.h"
+#include "DbMeter.h"
 
 //==============================================================================
 /**
 */
-class EqualizerAudioProcessorEditor  : public juce::AudioProcessorEditor
+class EqualizerAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     EqualizerAudioProcessorEditor (EqualizerAudioProcessor&);
@@ -26,6 +27,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void timerCallback() override;
 
     AnalyzerComponent analyzer;
 
@@ -37,14 +39,14 @@ private:
 
     // Background image variable
     juce::Image bgImage;
+    juce::Image ledOnImage;
+
+    //DbMeter variables
+    DbMeter DbMeterL, DbMeterR;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     EqualizerAudioProcessor& audioProcessor;
-
-    // Graphics components
-        //int windowWidth;
-        //int windowHeight;
 
     juce::Slider inputGainFader;
     juce::Slider outputGainFader;
@@ -63,10 +65,8 @@ private:
 
     juce::Slider lopassFrequency;
     juce::Label lopassFrequencyLabel;
-    //juce::Button lopassActive;
     
     juce::Slider hipassFrequency;
-    //juce::Button hipassActive;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAtch;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputGainAtch;

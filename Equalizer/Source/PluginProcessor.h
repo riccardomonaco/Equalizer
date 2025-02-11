@@ -32,6 +32,8 @@ public:
 
     void initFilters();
     void updateFilter();
+    bool getStateLoPass();
+    bool getStateHiPass();
     float valueToSteps(float value, int type);
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
@@ -64,6 +66,18 @@ public:
     // Spectrum analyzer ==========================================================
     void setAnalyzerComponent(AnalyzerComponent* analyzer);
     AnalyzerComponent* analyzerComponent = nullptr;
+    float getRmsLevel(const int channel);
+
+
+private:
+
+    float lastSampleRate;
+    int BWPeakFilterSub;
+    int BWPeakFilterBass;
+    int BWPeakFilterMid;
+    int BWPeakFilterHigh;
+    bool hipassActive;
+    bool lopassActive;
 
     enum
     {
@@ -72,13 +86,6 @@ public:
         mid = 2,
         high = 3
     };
-
-private:
-    float lastSampleRate;
-    int BWPeakFilterSub;
-    int BWPeakFilterBass;
-    int BWPeakFilterMid;
-    int BWPeakFilterHigh;
     
     // Filters ==================================================================
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 
