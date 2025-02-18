@@ -13,7 +13,6 @@
 #include "CustomLookAndFeel.h"
 #include "SelectorLookAndFeel.h"
 #include "AnalyzerComponent.h"
-#include "DbMeter.h"
 
 //==============================================================================
 /**

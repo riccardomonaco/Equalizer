@@ -220,7 +220,7 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 void EqualizerAudioProcessor::releaseResources()
 {
-    //analyzerComponent->stopTimer();
+    analyzerComponent->stopTimer();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -454,14 +454,4 @@ bool EqualizerAudioProcessor::getStateHiPass() {
 
 bool EqualizerAudioProcessor::getStateLoPass() {
     return lopassActive;
-}
-
-float EqualizerAudioProcessor::getRmsLevel(const int channel)
-{
-    /*
-    jassert(channel >= 0 && channel < rmsCalculationBuffer.getNumChannels());
-    rmsFifo.pull(rmsCalculationBuffer.getWritePointer(channel), channel, rmsWindowSize);
-    processLevelValue(rmsLevels[channel], Decibels::gainToDecibels(rmsCalculationBuffer.getRMSLevel(channel, 0, rmsWindowSize)));
-    return rmsLevels[channel].getCurrentValue();
-    */
 }

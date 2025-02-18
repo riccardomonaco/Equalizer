@@ -66,7 +66,6 @@ public:
     // Spectrum analyzer ==========================================================
     void setAnalyzerComponent(AnalyzerComponent* analyzer);
     AnalyzerComponent* analyzerComponent = nullptr;
-    float getRmsLevel(const int channel);
 
 
 private:
