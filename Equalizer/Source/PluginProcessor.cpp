@@ -220,7 +220,6 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 void EqualizerAudioProcessor::releaseResources()
 {
-    analyzerComponent->stopTimer();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
