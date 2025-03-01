@@ -196,7 +196,6 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
     //Instantiating background image
     bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_BG_SPC_png, BinaryData::EQ_BG_SPC_pngSize);
     ledOnImage = juce::ImageCache::getFromMemory(BinaryData::LED_RED_ON_png, BinaryData::LED_RED_ON_pngSize);
-    glassDotsImage = juce::ImageCache::getFromMemory(BinaryData::GLASS_OVERLAY_png, BinaryData::GLASS_OVERLAY_pngSize);
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
