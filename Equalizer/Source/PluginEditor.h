@@ -13,6 +13,7 @@
 #include "CustomLookAndFeel.h"
 #include "SelectorLookAndFeel.h"
 #include "AnalyzerComponent.h"
+#include "MeterComponent.h"
 
 //==============================================================================
 /**
@@ -29,6 +30,9 @@ public:
     void timerCallback() override;
 
     AnalyzerComponent analyzer;
+    //DbMeter variables
+    MeterComponent meterComponentL;
+    MeterComponent meterComponentR;
 
 
 private:
@@ -39,8 +43,9 @@ private:
     // Background image variable
     juce::Image bgImage;
     juce::Image ledOnImage;
+    juce::Image glassDotsImage;
 
-    //DbMeter variables
+    float resizeFactor = 1;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

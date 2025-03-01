@@ -39,7 +39,7 @@ void SelectorLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int 
     constexpr int numSteps = 4;
     constexpr float stepValues[numSteps] = { 0.26f, 0.42f, 0.58f, 0.73f };
 
-    // Trova il valore più vicino tra gli step
+    // Trova il valore piÃ¹ vicino tra gli step
     float closestStep = stepValues[0];
     for (int i = 1; i < numSteps; ++i)
     {
@@ -49,7 +49,7 @@ void SelectorLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int 
         }
     }
 
-    // Calcola l'angolo corretto per il valore più vicino
+    // Calcola l'angolo corretto per il valore piÃ¹ vicino
     auto angle = rotaryStartAngle + closestStep * (rotaryEndAngle - rotaryStartAngle);
 
     juce::AffineTransform transform =

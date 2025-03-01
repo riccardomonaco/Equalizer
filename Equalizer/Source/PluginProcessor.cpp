@@ -397,6 +397,24 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         analyzerComponent->pushNextBlockIntoFifo(audioBlock);
     }
 
+    const int numChannels = buffer.getNumChannels();
+    const int numSamples = buffer.getNumSamples();
+
+    float sumSquares = 0.0f;
+
+    for (int channel = 0; channel < numChannels; ++channel)
+    {
+        auto* channelData = buffer.getReadPointer(channel);
+        for (int i = 0; i < numSamples; ++i)
+        {
+            sumSquares += channelData[i] * channelData[i];
+
+        }
+    }
+
+    float meanSquare = sumSquares / (numSamples * numChannels);
+    rmsLevel = (meanSquare > 0.0f ? std::sqrt(meanSquare) : 0.0f); // Valore lineare
+
     audioBlock *= rawOutputGain;
 
     /*SAMPLE BY SAMPLE PROCESSING
@@ -453,4 +471,9 @@ bool EqualizerAudioProcessor::getStateHiPass() {
 
 bool EqualizerAudioProcessor::getStateLoPass() {
     return lopassActive;
+}
+
+float EqualizerAudioProcessor::getMeterLevel() 
+{
+    return juce::Decibels::gainToDecibels(rmsLevel);
 }

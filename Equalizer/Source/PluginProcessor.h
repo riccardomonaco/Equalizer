@@ -66,6 +66,9 @@ public:
     // Spectrum analyzer ==========================================================
     void setAnalyzerComponent(AnalyzerComponent* analyzer);
     AnalyzerComponent* analyzerComponent = nullptr;
+    
+    // dB Meter ===================================================================
+    float EqualizerAudioProcessor::getMeterLevel();
 
 
 private:
@@ -85,6 +88,8 @@ private:
         mid = 2,
         high = 3
     };
+
+    float rmsLevel{ -30.0f };  // Valore iniziale in dB
     
     // Filters ==================================================================
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, 

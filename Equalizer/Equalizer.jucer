@@ -5,6 +5,8 @@
               pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="gkWq9L" name="Equalizer">
     <GROUP id="{93B9DB73-51F7-4FA8-E95F-88E8730E1145}" name="Assets">
+      <FILE id="A9pcQy" name="GLASS_OVERLAY.png" compile="0" resource="1"
+            file="Source/Assets/GLASS_OVERLAY.png"/>
       <FILE id="DI3BCB" name="LED_RED_ON.png" compile="0" resource="1" file="Source/Assets/LED_RED_ON.png"/>
       <FILE id="rtlpaD" name="KNOB_SELECTOR.png" compile="0" resource="1"
             file="Source/Assets/KNOB_SELECTOR.png"/>
@@ -13,6 +15,8 @@
       <FILE id="F74q4J" name="FADER.png" compile="0" resource="1" file="Source/Assets/FADER.png"/>
     </GROUP>
     <GROUP id="{A9B44CE4-4DB6-FD55-BFFE-FCE4510B4D1E}" name="Source">
+      <FILE id="luVpVM" name="MeterComponent.h" compile="0" resource="0"
+            file="Source/MeterComponent.h"/>
       <FILE id="psPkLu" name="AnalyzerComponent.h" compile="0" resource="0"
             file="Source/AnalyzerComponent.h"/>
       <FILE id="mcXrZL" name="SelectorLookAndFeel.cpp" compile="1" resource="0"

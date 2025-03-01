@@ -44,11 +44,11 @@ public:
                 mixedSample += audioBlock.getSample(channel, sample);
             }
 
-            mixedSample /= static_cast<float>(numChannels); // Media tra i canali (se più di uno)
+            mixedSample /= static_cast<float>(numChannels); // Media tra i canali (se piÃ¹ di uno)
 
             fifo[fifoIndex++] = mixedSample;
 
-            // Se il FIFO è pieno, copiamo i dati per l'FFT
+            // Se il FIFO Ã¨ pieno, copiamo i dati per l'FFT
             if (fifoIndex == fftSize)
             {
                 if (!nextFFTBlockReady)

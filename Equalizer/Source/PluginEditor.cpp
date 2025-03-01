@@ -13,7 +13,9 @@
 
 //==============================================================================
 EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p),
+    meterComponentL([this] { return audioProcessor.getMeterLevel(); }),
+    meterComponentR([this] { return audioProcessor.getMeterLevel(); })
 {
     /********************************************************
      *
@@ -177,8 +179,11 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     p.setAnalyzerComponent(&analyzer);
     addAndMakeVisible(analyzer);
 
+    addAndMakeVisible(meterComponentL);
+    addAndMakeVisible(meterComponentR);
+
     //Setting the window size
-    setSize(750 * 2, 450 * 2);
+    setSize(1500 * resizeFactor, 900 * resizeFactor);
 }
 
 EqualizerAudioProcessorEditor::~EqualizerAudioProcessorEditor()
@@ -191,18 +196,19 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
     //Instantiating background image
     bgImage = juce::ImageCache::getFromMemory(BinaryData::EQ_BG_SPC_png, BinaryData::EQ_BG_SPC_pngSize);
     ledOnImage = juce::ImageCache::getFromMemory(BinaryData::LED_RED_ON_png, BinaryData::LED_RED_ON_pngSize);
+    glassDotsImage = juce::ImageCache::getFromMemory(BinaryData::GLASS_OVERLAY_png, BinaryData::GLASS_OVERLAY_pngSize);
     
     //Rendering the image
     g.drawImageWithin(bgImage, 0, 0, getWidth(), getHeight(), juce::RectanglePlacement::stretchToFit);
     
     //Rendering active leds
     if (audioProcessor.getStateHiPass()) {
-        g.drawImage(ledOnImage, 193, 819, 50, 50, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
+        g.drawImage(ledOnImage, 193 * resizeFactor, 819 * resizeFactor, 50 * resizeFactor, 50 * resizeFactor, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
     }
     else repaint();
 
     if (audioProcessor.getStateLoPass()) {
-        g.drawImage(ledOnImage, 870, 819, 50, 50, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
+        g.drawImage(ledOnImage, 870 * resizeFactor, 819 * resizeFactor, 50 * resizeFactor, 50 * resizeFactor, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
     }
     else repaint();
 }
@@ -210,34 +216,34 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
 void EqualizerAudioProcessorEditor::resized()
 {
     /* Dimensions variables */
-    int knobWidth = 150;
-    int knobHeight = 150;
-    int filterKnobY = 600;
-    int gainKnobY = 450;
-    int spacingBKnobs = 250;
+    int knobWidth = 150 * resizeFactor;
+    int knobHeight = 150 * resizeFactor;
+    int filterKnobY = 600 * resizeFactor;
+    int gainKnobY = 450 * resizeFactor;
+    int spacingBKnobs = 250 * resizeFactor;
     //lopass hipass
-    int lopasshipassY = 704;
-    int lopasshipassWidth = 109;
-    int lopassX = 910;
-    int hipassX = 90;
+    int lopasshipassY = 704 * resizeFactor;
+    int lopasshipassWidth = 109 * resizeFactor;
+    int lopassX = 910 * resizeFactor;
+    int hipassX = 90 * resizeFactor;
     //volume faders
-    int fadersWidth = 80;
-    int fadersHeight = 362;
-    int fadersImageOffset = 4;
-    float fadersScaleFactor = 1.5;
-    int inputGainFaderX = 1230;
-    int outputGainFaderX = 1370;
-    int inoutGainFaderY = 490;
+    int fadersWidth = 80 * resizeFactor;
+    int fadersHeight = 362 * resizeFactor;
+    int fadersImageOffset = 4 * resizeFactor;
+    float fadersScaleFactor = 1.5 * resizeFactor;
+    int inputGainFaderX = 1230 * resizeFactor;
+    int outputGainFaderX = 1370 * resizeFactor;
+    int inoutGainFaderY = 490 * resizeFactor;
     //sub range
-    int subGainX = 244;
-    int subGainY = 495.5;
-    int subGainWidth = 68;
-    int subFrequencyX = 244;
-    int subFrequencyY = 623;
-    int subFrequencyWidth = 68;
+    int subGainX = 244 * resizeFactor;
+    int subGainY = 495.5 * resizeFactor;
+    int subGainWidth = 68 * resizeFactor;
+    int subFrequencyX = 244 * resizeFactor;
+    int subFrequencyY = 623 * resizeFactor;
+    int subFrequencyWidth = 68 * resizeFactor;
     //knobs 
-    int lilKnobsDistance = 117;
-    int lilKnobWidth = 68;
+    int lilKnobsDistance = 117 * resizeFactor;
+    int lilKnobWidth = 68 * resizeFactor;
 
     /* Input and output faders */
     inputGainFader.setBounds(inputGainFaderX - fadersWidth * fadersScaleFactor + fadersImageOffset, inoutGainFaderY, fadersWidth * 2, fadersHeight);
@@ -278,7 +284,9 @@ void EqualizerAudioProcessorEditor::resized()
                        lilKnobWidth,
                        lilKnobWidth);
 
-    analyzer.setBounds(60, 60, 990, 330);
+    analyzer.setBounds(60 * resizeFactor, 60 * resizeFactor, 990 * resizeFactor, 330 * resizeFactor);
+    meterComponentL.setBounds(1254 * resizeFactor, 80 * resizeFactor, 50 * resizeFactor, 350 * resizeFactor);
+    meterComponentR.setBounds(1304 * resizeFactor, 80 * resizeFactor, 50 * resizeFactor, 350 * resizeFactor);
 }
 
 void EqualizerAudioProcessorEditor::timerCallback()
