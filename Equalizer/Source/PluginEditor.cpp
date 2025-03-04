@@ -210,6 +210,27 @@ void EqualizerAudioProcessorEditor::paint (juce::Graphics& g)
         g.drawImage(ledOnImage, 870 * resizeFactor, 819 * resizeFactor, 50 * resizeFactor, 50 * resizeFactor, 0, 0, ledOnImage.getWidth(), ledOnImage.getHeight());
     }
     else repaint();
+
+    // Imposta le frequenze per le linee della griglia
+    std::vector<float> gridFrequencies = { 30.0f, 60.0f, 90.0f, 100.0f, 150.f, 200.0f, 350.f, 500.0f, 1000.0f, 2000.0f, 3500.f, 5000.0f, 8000.f, 12000.f, 20000.0f };
+
+    // Loop per disegnare le linee della griglia
+    for (float freq : gridFrequencies)
+    {
+        // Mappa la frequenza alla posizione orizzontale
+        auto logMinFreq = std::log10(20.0f);  // Frequenza minima udibile (20 Hz)
+        auto logMaxFreq = std::log10(20000.0f); // Frequenza massima udibile (20 kHz)
+        auto logFreq = std::log10(freq); // Frequenza corrente in logaritmica
+        auto normalizedPos = (logFreq - logMinFreq) / (logMaxFreq - logMinFreq); // Posizione normalizzata tra 0 e 1
+
+        // Mappa la posizione normalizzata nella gamma di pixel
+        int xPos = (int)(60 + normalizedPos * (1050 - 60));
+
+        // Disegna la linea verticale per la griglia (puoi usare un metodo di rendering appropriato per il tuo framework)
+        g.setColour(juce::Colours::lightgrey); // Imposta il colore della griglia (puoi cambiarlo)
+        g.drawVerticalLine(xPos, 50, 200); // Disegna una linea verticale
+        g.drawText(juce::String(freq) + " Hz", xPos + 2, 5, 50, 20, juce::Justification::centredLeft);
+    }
 }
 
 void EqualizerAudioProcessorEditor::resized()
