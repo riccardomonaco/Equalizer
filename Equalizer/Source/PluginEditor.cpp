@@ -220,11 +220,13 @@ void EqualizerAudioProcessorEditor::resized()
     int filterKnobY = 600 * resizeFactor;
     int gainKnobY = 450 * resizeFactor;
     int spacingBKnobs = 250 * resizeFactor;
+    
     //lopass hipass
     int lopasshipassY = 704 * resizeFactor;
     int lopasshipassWidth = 109 * resizeFactor;
     int lopassX = 910 * resizeFactor;
     int hipassX = 90 * resizeFactor;
+    
     //volume faders
     int fadersWidth = 80 * resizeFactor;
     int fadersHeight = 362 * resizeFactor;
@@ -233,6 +235,7 @@ void EqualizerAudioProcessorEditor::resized()
     int inputGainFaderX = 1230 * resizeFactor;
     int outputGainFaderX = 1370 * resizeFactor;
     int inoutGainFaderY = 490 * resizeFactor;
+   
     //sub range
     int subGainX = 244 * resizeFactor;
     int subGainY = 495.5 * resizeFactor;
@@ -240,6 +243,7 @@ void EqualizerAudioProcessorEditor::resized()
     int subFrequencyX = 244 * resizeFactor;
     int subFrequencyY = 623 * resizeFactor;
     int subFrequencyWidth = 68 * resizeFactor;
+    
     //knobs 
     int lilKnobsDistance = 117 * resizeFactor;
     int lilKnobWidth = 68 * resizeFactor;
@@ -284,33 +288,9 @@ void EqualizerAudioProcessorEditor::resized()
                        lilKnobWidth);
 
     analyzer.setBounds(60 * resizeFactor, 60 * resizeFactor, 990 * resizeFactor, 330 * resizeFactor);
-    meterComponentL.setBounds(1254 * resizeFactor, 80 * resizeFactor, 50 * resizeFactor, 350 * resizeFactor);
-    meterComponentR.setBounds(1304 * resizeFactor, 80 * resizeFactor, 50 * resizeFactor, 350 * resizeFactor);
+    meterComponentL.setBounds(1245 * resizeFactor, 138 * resizeFactor, 40 * resizeFactor, 300 * resizeFactor);
+    meterComponentR.setBounds(1321 * resizeFactor, 138 * resizeFactor, 40 * resizeFactor, 300 * resizeFactor);
 }
 
 void EqualizerAudioProcessorEditor::timerCallback()
-{
-    /*
-    if (++framesElapsed > 100)
-    {
-        framesElapsed = 0;
-        maxRmsLeft = -100.f;
-        maxRmsRight = -100.f;
-    }
-
-    const auto leftGain = audioProcessor.getRmsLevel(0);
-    const auto rightGain = audioProcessor.getRmsLevel(1);
-    if (leftGain > maxRmsLeft)
-        maxRmsLeft = leftGain;
-    if (rightGain > maxRmsRight)
-        maxRmsRight = rightGain;
-    currentRmsValue.setText(String{ leftGain, 2 } + "   " + String{ rightGain, 2 }, sendNotification);
-    maxRmsValue.setText(String{ maxRmsLeft, 2 } + "   " + String{ maxRmsRight, 2 }, sendNotification);
-
-    DbMeterL.setLevel(leftGain);
-    DbMeterL.repaint();
-
-    DbMeterR.setLevel(rightGain);
-    DbMeterR.repaint();
-    */
-}
+{}

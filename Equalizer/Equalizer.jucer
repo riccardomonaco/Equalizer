@@ -5,6 +5,7 @@
               pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="gkWq9L" name="Equalizer">
     <GROUP id="{93B9DB73-51F7-4FA8-E95F-88E8730E1145}" name="Assets">
+      <FILE id="w3bpX8" name="BG_DOT.png" compile="0" resource="1" file="Source/Assets/BG_DOT.png"/>
       <FILE id="Zg4SL7" name="GLASS_DOT.png" compile="0" resource="1" file="Source/Assets/GLASS_DOT.png"/>
       <FILE id="A9pcQy" name="GLASS_OVERLAY.png" compile="0" resource="1"
             file="Source/Assets/GLASS_OVERLAY.png"/>
