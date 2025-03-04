@@ -28,7 +28,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void timerCallback() override;
-    void plotGrid();
+    void plotGrid(juce::Graphics& g);
 
     AnalyzerComponent analyzer;
     //DbMeter variables

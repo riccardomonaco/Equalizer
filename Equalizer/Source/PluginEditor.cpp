@@ -295,7 +295,7 @@ void EqualizerAudioProcessorEditor::resized()
 void EqualizerAudioProcessorEditor::timerCallback()
 {}
 
-void EqualizerAudioProcessorEditor::plotGrid()
+void EqualizerAudioProcessorEditor::plotGrid(juce::Graphics& g)
 {
     std::vector<float> gridFrequencies = { 30.0f, 60.0f, 90.0f, 100.0f, 150.f, 200.0f, 350.f, 500.0f, 1000.0f, 2000.0f, 3500.f, 5000.0f, 8000.f, 12000.f, 20000.0f };
 
