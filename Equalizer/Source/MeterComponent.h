@@ -11,6 +11,10 @@ public:
         startTimerHz(30);
     }
 
+    ~MeterComponent() {
+        stopTimer();
+    }
+
     void paint(juce::Graphics& g) override
     {
         const auto bounds = getLocalBounds().toFloat();

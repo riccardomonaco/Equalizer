@@ -176,8 +176,9 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
     highGain.setLookAndFeel(&customLookAndFeel);
 
     //Setting and adding spectrum analyzer
-    p.setAnalyzerComponent(&analyzer);
-    addAndMakeVisible(analyzer);
+    auto analyzer = std::make_unique<AnalyzerComponent>();
+    audioProcessor.setAnalyzerComponent(std::move(analyzer));
+    addAndMakeVisible(*audioProcessor.analyzerComponent);
 
     addAndMakeVisible(meterComponentL);
     addAndMakeVisible(meterComponentR);
@@ -188,6 +189,18 @@ EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProc
 
 EqualizerAudioProcessorEditor::~EqualizerAudioProcessorEditor()
 {
+    inputGainAtch.reset(nullptr);
+    outputGainAtch.reset(nullptr);
+    subGainAtch.reset(nullptr);
+    bassGainAtch.reset(nullptr);
+    midGainAtch.reset(nullptr);
+    highGainAtch.reset(nullptr);
+    subFrequencyAtch.reset(nullptr);
+    bassFrequencyAtch.reset(nullptr);
+    midFrequencyAtch.reset(nullptr);
+    highFrequencyAtch.reset(nullptr);
+    lopassFrequencyAtch.reset(nullptr);
+    hipassFrequencyAtch.reset(nullptr);
 }
 
 //==============================================================================
@@ -287,13 +300,10 @@ void EqualizerAudioProcessorEditor::resized()
                        lilKnobWidth,
                        lilKnobWidth);
 
-    analyzer.setBounds(60 * resizeFactor, 60 * resizeFactor, 990 * resizeFactor, 330 * resizeFactor);
+    audioProcessor.analyzerComponent->setBounds(60 * resizeFactor, 60 * resizeFactor, 990 * resizeFactor, 330 * resizeFactor);
     meterComponentL.setBounds(1245 * resizeFactor, 138 * resizeFactor, 40 * resizeFactor, 300 * resizeFactor);
     meterComponentR.setBounds(1321 * resizeFactor, 138 * resizeFactor, 40 * resizeFactor, 300 * resizeFactor);
 }
-
-void EqualizerAudioProcessorEditor::timerCallback()
-{}
 
 void EqualizerAudioProcessorEditor::plotGrid(juce::Graphics& g)
 {

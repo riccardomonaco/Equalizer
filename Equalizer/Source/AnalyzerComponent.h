@@ -27,6 +27,10 @@ public:
         startTimerHz(30);
     }
 
+    ~AnalyzerComponent() {
+        stopTimer();
+    }
+
 
     //==============================================================================
     void pushNextBlockIntoFifo(const juce::dsp::AudioBlock<float>& audioBlock) noexcept
@@ -57,7 +61,6 @@ public:
                     memcpy(fftData, fifo, sizeof(fifo));
                     nextFFTBlockReady = true;
                 }
-
                 fifoIndex = 0;
             }
         }

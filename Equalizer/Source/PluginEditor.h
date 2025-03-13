@@ -18,7 +18,7 @@
 //==============================================================================
 /**
 */
-class EqualizerAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
+class EqualizerAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     EqualizerAudioProcessorEditor (EqualizerAudioProcessor&);
@@ -27,10 +27,8 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void timerCallback() override;
     void plotGrid(juce::Graphics& g);
 
-    AnalyzerComponent analyzer;
     //DbMeter variables
     MeterComponent meterComponentL;
     MeterComponent meterComponentR;

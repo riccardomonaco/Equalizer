@@ -45,6 +45,14 @@ treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 
 EqualizerAudioProcessor::~EqualizerAudioProcessor()
 {
+    analyzerComponent = nullptr;
+    lopassFilter.reset();
+    hipassFilter.reset();
+    subFilter.reset();
+    bassFilter.reset();
+    midFilter.reset();
+    highFilter.reset();
+    DBG("PluginProcessor destructor called");
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout EqualizerAudioProcessor::createParameterLayout() 
@@ -220,6 +228,7 @@ void EqualizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 void EqualizerAudioProcessor::releaseResources()
 {
+    analyzerComponent.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -461,8 +470,8 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new EqualizerAudioProcessor();
 }
 
-void EqualizerAudioProcessor::setAnalyzerComponent(AnalyzerComponent* analyzer) {
-    this->analyzerComponent = analyzer;
+void EqualizerAudioProcessor::setAnalyzerComponent(std::unique_ptr<AnalyzerComponent> analyzer) {
+    this->analyzerComponent = std::move(analyzer);
 }
 
 bool EqualizerAudioProcessor::getStateHiPass() {

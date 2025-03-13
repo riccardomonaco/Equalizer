@@ -26,13 +26,7 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
      float sliderPos, float minSliderPos, float maxSliderPos,
      const juce::Slider::SliderStyle style, juce::Slider& slider)
 {
-    /**************
-    * DEBUG COLORS
-    ***************/
-    //g.setColour(juce::Colours::blue);
-    //g.fillRect(x, y, width, height);
-
-    // Dimensioni e posizione dell'immagine/*
+    // Dimensioni e posizione dell'immagine
     const int imageWidth = faderImage.getWidth();
     const int imageHeight = faderImage.getHeight();
 
@@ -47,12 +41,6 @@ void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int wi
     float sliderPos, float rotaryStartAngle, float rotaryEndAngle,
     juce::Slider& slider)
 {
-    /**************
-    * DEBUG COLORS
-    ***************/
-    //g.setColour(juce::Colours::blue);
-    //g.fillRect(x, y, width, height);
-
     const int imageWidth = lhKnobImage.getWidth();
     const int imageHeight = lhKnobImage.getHeight();
 
