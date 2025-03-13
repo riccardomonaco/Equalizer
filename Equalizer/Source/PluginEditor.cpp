@@ -14,8 +14,8 @@
 //==============================================================================
 EqualizerAudioProcessorEditor::EqualizerAudioProcessorEditor (EqualizerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
-    meterComponentL([this] { return audioProcessor.getMeterLevel(); }),
-    meterComponentR([this] { return audioProcessor.getMeterLevel(); })
+    meterComponentL([this] { return audioProcessor.getMeterLevel(0); }),
+    meterComponentR([this] { return audioProcessor.getMeterLevel(1); })
 {
     /********************************************************
      *

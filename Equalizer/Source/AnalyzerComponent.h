@@ -74,8 +74,8 @@ public:
         // then render our FFT data..
         forwardFFT.performFrequencyOnlyForwardTransform(fftData);
 
-        auto mindB = -50.0f;
-        auto maxdB = 0.0f;
+        auto mindB = -21.0f;
+        auto maxdB = 9.0f;
 
         for (int i = 0; i < scopeSize; ++i)
         {
@@ -90,8 +90,7 @@ public:
 
             // Converte in dB e normalizza
             auto level = juce::jmap(juce::jlimit(mindB, maxdB,
-                juce::Decibels::gainToDecibels(fftData[fftDataIndex]) -
-                juce::Decibels::gainToDecibels((float)fftSize)),
+                juce::Decibels::gainToDecibels(fftData[fftDataIndex]) - juce::Decibels::gainToDecibels((float)fftSize) / 2),
                 mindB, maxdB, 0.0f, 1.0f);
             scopeData[i] = level;
         }
@@ -112,8 +111,8 @@ public:
 
         for (int i = 1; i < scopeSize; ++i)
         {
-            auto width = getLocalBounds().getWidth();
-            auto height = getLocalBounds().getHeight();
+            auto width = getBounds().getWidth();
+            auto height = getBounds().getHeight();
 
             g.drawLine({ (float)juce::jmap(i - 1, 0, scopeSize - 1, 0, width),
                                   juce::jmap(scopeData[i - 1], 0.0f, 1.0f, (float)height, 0.0f),

@@ -406,36 +406,14 @@ void EqualizerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         analyzerComponent->pushNextBlockIntoFifo(audioBlock);
     }
 
-    const int numChannels = buffer.getNumChannels();
-    const int numSamples = buffer.getNumSamples();
-
-    float sumSquares = 0.0f;
-
-    for (int channel = 0; channel < numChannels; ++channel)
-    {
-        auto* channelData = buffer.getReadPointer(channel);
-        for (int i = 0; i < numSamples; ++i)
-        {
-            sumSquares += channelData[i] * channelData[i];
-
-        }
-    }
-
-    float meanSquare = sumSquares / (numSamples * numChannels);
-    rmsLevel = (meanSquare > 0.0f ? std::sqrt(meanSquare) : 0.0f); // Valore lineare
-
     audioBlock *= rawOutputGain;
 
-    /*SAMPLE BY SAMPLE PROCESSING
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample) 
-        {
+    peakLevelLeft = buffer.getMagnitude(0, 0, buffer.getNumSamples());
+    peakLevelRight = buffer.getMagnitude(1, 0, buffer.getNumSamples());
 
-        }
-    }
-    */
+    //DBG("Plugin TRUE PEAK Left: " << peakLevelLeft << " (" << juce::Decibels::gainToDecibels(peakLevelLeft) << " dBFS)");
+    //DBG("Plugin TRUE PEAK Left: " << peakLevelRight << " (" << juce::Decibels::gainToDecibels(peakLevelRight) << " dBFS)");
+
 }
 
 //==============================================================================
@@ -482,7 +460,8 @@ bool EqualizerAudioProcessor::getStateLoPass() {
     return lopassActive;
 }
 
-float EqualizerAudioProcessor::getMeterLevel() 
+float EqualizerAudioProcessor::getMeterLevel(int channel) 
 {
-    return juce::Decibels::gainToDecibels(rmsLevel);
+    if (channel == 0) return juce::Decibels::gainToDecibels(peakLevelLeft);
+    else if(channel == 1) return juce::Decibels::gainToDecibels(peakLevelRight);
 }

@@ -68,7 +68,8 @@ public:
     void setAnalyzerComponent(std::unique_ptr<AnalyzerComponent> analyzer);
 
     // dB Meter ===================================================================
-    float EqualizerAudioProcessor::getMeterLevel();
+    float EqualizerAudioProcessor::getMeterLevel(int channel);
+    float peakLevelLeft, peakLevelRight;
 
 
 private:
